@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .text-primary {
+    @apply text-gray-800 dark:text-gray-50;
+  }
+  .text-secondary {
+    @apply text-gray-700 dark:text-gray-200;
+  }
+  .text-tertiary {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+  .text-error {
+    @apply text-red-600 dark:text-red-500;
+  }
+  .list-primary {
+    @apply text-secondary block w-full cursor-pointer rounded p-4 text-left text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-800;
+  }
+  .list-secondary {
+    @apply text-tertiary block w-full cursor-pointer rounded p-3 text-left text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-800;
+  }
+}
