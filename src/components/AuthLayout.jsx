@@ -6,7 +6,7 @@ const AuthLayout = () => {
       <div className="container flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-900">
         <Outlet />
       </div>
-      <div className="container bg-white dark:bg-gray-800"></div>
+      <div className="container bg-white dark:bg-gray-700"></div>
     </div>
   );
 };

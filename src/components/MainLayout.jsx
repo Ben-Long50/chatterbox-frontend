@@ -1,9 +1,11 @@
 import Sidebar from './Sidebar';
+import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
   return (
-    <div className="bg-white dark:bg-gray-800">
+    <div className="flex bg-white dark:bg-gray-700">
       <Sidebar />
+      <Outlet />
     </div>
   );
 };

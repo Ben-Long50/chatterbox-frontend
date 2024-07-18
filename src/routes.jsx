@@ -9,6 +9,7 @@ import AuthLayout from './components/AuthLayout';
 import SignupForm from './components/SignupForm';
 import SigninForm from './components/SigninForm';
 import MainLayout from './components/MainLayout';
+import Chat from './components/Chat';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +18,9 @@ const router = createBrowserRouter(
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/signin" element={<SigninForm />} />
       </Route>
-      <Route path="home" element={<MainLayout />} />
+      <Route path="home" element={<MainLayout />}>
+        <Route index element={<Chat />} />
+      </Route>
     </Route>,
   ),
 );

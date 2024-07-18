@@ -51,7 +51,7 @@ const SigninForm = () => {
 
   return (
     <div className="flex w-1/2 min-w-80 flex-col gap-6">
-      <Form method="post" onSubmit={handleSubmit} buttonText="Sign In">
+      <Form action="/home" method="post" onSubmit={handleSubmit}>
         <h1 className="text-primary pb-4 text-4xl font-semibold">Sign In</h1>
         <InputField
           label="Username"

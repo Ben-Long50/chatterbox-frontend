@@ -21,4 +21,13 @@
   .list-secondary {
     @apply text-tertiary block w-full cursor-pointer rounded p-3 text-left text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-800;
   }
+  .accent-primary {
+    @apply transform-gpu bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-300 dark:border-none dark:shadow-black;
+  }
+  .message-received {
+    @apply text-primary w-fit max-w-xl rounded bg-gray-200 p-3 dark:bg-gray-900;
+  }
+  .message-sent {
+    @apply w-fit max-w-xl rounded bg-yellow-200 p-2 text-gray-900;
+  }
 }
