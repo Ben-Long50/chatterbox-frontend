@@ -21,56 +21,62 @@ const Chat = () => {
   };
 
   return (
-    <div className="container bottom-0 flex max-w-screen-xl flex-col justify-end gap-4 pb-8">
-      {messages.map((message, index) => {
-        const isNewDate =
-          index === 0 ||
-          format(messages[index - 1].date, 'PP') !== format(message.date, 'PP');
-        return (
-          <>
-            {isNewDate && (
-              <p className="text-tertiary self-center text-sm">
-                {format(message.date, 'PP')}
-              </p>
-            )}
+    <>
+      <div className="container flex max-w-screen-xl flex-col justify-between">
+        <div className="fixed top-0 h-1/4 w-full bg-gradient-to-b from-gray-700 from-5% to-transparent"></div>
+        <div className="flex flex-col gap-4 pb-8 pt-48">
+          {messages.map((message, index) => {
+            const isNewDate =
+              index === 0 ||
+              format(messages[index - 1].date, 'PP') !==
+                format(message.date, 'PP');
+            return (
+              <>
+                {isNewDate && (
+                  <p className="text-tertiary self-center text-sm">
+                    {format(message.date, 'PP')}
+                  </p>
+                )}
 
-            <div key={index} className="self-end">
-              <div className="message-sent mb-1">
-                <p className="text-inherit">{message.body}</p>
-              </div>
-              <p className="text-tertiary text-sm">
-                {format(message.date, 'pp')}
-              </p>
-            </div>
-          </>
-        );
-      })}
-      <form
-        action="post"
-        className="ml-auto mr-auto mt-12 flex w-1/2 min-w-96 items-center gap-6"
-      >
-        <input
-          ref={inputRef}
-          className="text-primary w-full rounded bg-gray-200 p-3 dark:bg-gray-900"
-          type="text"
-          placeholder="The world awaits your message..."
-          onChange={handleChange}
-        />
-        <button
-          className={
-            'accent-primary grid shrink-0 place-content-center rounded-full p-2 hover:scale-110'
-          }
-          onClick={handleSubmit}
-        >
-          <Icon
-            className="translate-x-10"
-            path={mdiSend}
-            size={1.25}
-            rotate={-45}
-          ></Icon>
-        </button>
-      </form>
-    </div>
+                <div key={index} className="self-end">
+                  <div className="message-sent mb-1">
+                    <p className="text-inherit">{message.body}</p>
+                  </div>
+                  <p className="text-tertiary text-sm">
+                    {format(message.date, 'pp')}
+                  </p>
+                </div>
+              </>
+            );
+          })}
+          <form
+            action="post"
+            className="ml-auto mr-auto mt-12 flex w-1/2 min-w-96 items-center gap-6"
+          >
+            <input
+              ref={inputRef}
+              className="text-primary w-full rounded bg-gray-200 p-3 dark:bg-gray-900"
+              type="text"
+              placeholder="The world awaits your message..."
+              onChange={handleChange}
+            />
+            <button
+              className={
+                'accent-primary grid shrink-0 place-content-center rounded-full p-2 hover:scale-110'
+              }
+              onClick={handleSubmit}
+            >
+              <Icon
+                className="translate-x-10"
+                path={mdiSend}
+                size={1.25}
+                rotate={-45}
+              ></Icon>
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 
