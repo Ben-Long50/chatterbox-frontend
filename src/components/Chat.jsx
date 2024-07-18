@@ -23,8 +23,8 @@ const Chat = () => {
   return (
     <>
       <div className="container flex max-w-screen-xl flex-col justify-between">
-        <div className="fixed top-0 h-1/4 w-full bg-gradient-to-b from-gray-700 from-5% to-transparent"></div>
-        <div className="flex flex-col gap-4 pb-8 pt-48">
+        <div className="fixed top-0 h-1/4 w-full bg-gradient-to-b from-white from-5% to-transparent dark:from-gray-700"></div>
+        <div className="mt-auto flex flex-col gap-4 pb-8 pt-48">
           {messages.map((message, index) => {
             const isNewDate =
               index === 0 ||
