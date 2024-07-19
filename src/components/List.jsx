@@ -14,10 +14,8 @@ const List = (props) => {
           ></Icon>
         </span>
       </summary>
-      <ul className="mt-2 space-y-1 px-4">
-        {props.children.map((child, index) => {
-          return <li key={index}>{child}</li>;
-        })}
+      <ul className="mt-2 flex flex-col gap-1 space-y-1 px-4">
+        {props.children}
       </ul>
     </details>
   );

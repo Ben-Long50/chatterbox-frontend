@@ -1,15 +1,18 @@
 import UserInfo from './UserInfo';
 import List from './List';
 import { Link } from 'react-router-dom';
-import { useState, useContext } from 'react';
+import { useState, useContext, useRef } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronLeft } from '@mdi/js';
+import { mdiChevronLeft, mdiPlus } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 
 const Sidebar = (props) => {
   const [activeItem, setActiveItem] = useState('global');
   const [visibility, setVisibility] = useState(true);
-  const { apiUrl, signout } = useContext(AuthContext);
+  const [input, setInput] = useState('');
+  const { apiUrl, signout, userId } = useContext(AuthContext);
+
+  const chatNameRef = useRef(null);
 
   const handleClick = (e, id) => {
     setActiveItem(e.currentTarget);
@@ -19,6 +22,34 @@ const Sidebar = (props) => {
 
   const handleVisibility = () => {
     setVisibility(!visibility);
+  };
+
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  };
+
+  const createChat = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const chat = { name: input, author: userId };
+
+    try {
+      const response = await fetch(`${apiUrl}/chats`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(chat),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        console.log(result.message);
+        chatNameRef.current.value = '';
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -57,22 +88,43 @@ const Sidebar = (props) => {
           <li>
             <List heading="Private Chats">
               {props.chats.map((chat) => {
-                if (chat.name !== 'global') {
+                if (chat.name !== 'Global') {
                   return (
-                    <Link
-                      to={`/chats/${chat.name}`}
-                      key={chat.name}
-                      id={chat._id}
-                      className={`list-secondary ${activeItem === chat.name && 'accent-primary'}`}
-                      onClick={() =>
-                        handleClick({ currentTarget: chat.name }, chat._id)
-                      }
-                    >
-                      {chat.name}
-                    </Link>
+                    <li key={chat.name}>
+                      <Link
+                        to={`/chats/${chat.name}`}
+                        id={chat._id}
+                        className={`list-secondary ${activeItem === chat.name && 'accent-primary'}`}
+                        onClick={() =>
+                          handleClick({ currentTarget: chat.name }, chat._id)
+                        }
+                      >
+                        {chat.name}
+                      </Link>
+                    </li>
                   );
                 }
               })}
+              <li>
+                <form
+                  method="post"
+                  className="my-4 flex items-center justify-start gap-4"
+                  onSubmit={createChat}
+                >
+                  <button
+                    className={`accent-primary ml-3 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!visibility && 'translate-x-180'}`}
+                  >
+                    <Icon path={mdiPlus} size={1.5} />
+                  </button>
+                  <input
+                    ref={chatNameRef}
+                    className="text-primary w-full rounded bg-gray-200 p-2 dark:bg-gray-900"
+                    type="text"
+                    placeholder="New chat name"
+                    onChange={handleChange}
+                  />
+                </form>
+              </li>
             </List>
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />

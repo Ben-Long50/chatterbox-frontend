@@ -6,7 +6,7 @@ import { AuthContext } from './AuthContext';
 import { useOutletContext } from 'react-router-dom';
 
 const Chat = () => {
-  const [messages, setMessages] = useState([]);
+  const [chatInfo, setChatInfo] = useState({ name: '', messages: [] });
   const [draft, setDraft] = useState('');
   const [activeChatId] = useOutletContext();
   const { apiUrl, userId } = useContext(AuthContext);
@@ -15,7 +15,6 @@ const Chat = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     const fetchData = async () => {
       try {
         const response = await fetch(`${apiUrl}/chats/${activeChatId}`, {
@@ -24,9 +23,9 @@ const Chat = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        const messages = await response.json();
+        const data = await response.json();
         if (response.ok) {
-          setMessages(messages);
+          setChatInfo(data);
         }
       } catch (error) {
         console.error(error);
@@ -44,8 +43,6 @@ const Chat = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const message = { message: draft, author: userId, date: new Date() };
-    console.log(messages);
-    console.log(userId);
 
     try {
       const response = await fetch(`${apiUrl}/chats/${activeChatId}`, {
@@ -69,12 +66,16 @@ const Chat = () => {
   return (
     <>
       <div className="container flex max-w-screen-xl flex-col justify-between">
-        <div className="fixed top-0 h-1/4 w-full bg-gradient-to-b from-white from-5% to-transparent dark:from-gray-700"></div>
-        <div className="mt-auto flex flex-col gap-4 pb-8 pt-48">
-          {messages.map((message, index) => {
+        <div className="top-0 h-1/4 w-full bg-gradient-to-b from-white from-5% to-transparent dark:from-gray-700">
+          <h1 className="pt-8 text-center text-4xl font-semibold">
+            {chatInfo.name}
+          </h1>
+        </div>
+        <div className="mt-auto flex flex-col gap-1 pb-8 pt-48">
+          {chatInfo.messages.map((message, index) => {
             const isNewDate =
               index === 0 ||
-              format(messages[index - 1].date, 'PP') !==
+              format(chatInfo.messages[index - 1].date, 'PP') !==
                 format(message.date, 'PP');
             return (
               <>

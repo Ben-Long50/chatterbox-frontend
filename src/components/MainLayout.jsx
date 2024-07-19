@@ -5,7 +5,7 @@ import { AuthContext } from './AuthContext';
 
 const MainLayout = () => {
   const [chats, setChats] = useState([]);
-  const [activeChatId, setActiveChatId] = useState(chats[0]);
+  const [activeChatId, setActiveChatId] = useState(null);
   const { apiUrl, userId } = useContext(AuthContext);
 
   useEffect(() => {
@@ -18,10 +18,12 @@ const MainLayout = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        const chats = await response.json();
+        const data = await response.json();
         if (response.ok) {
-          console.log(chats);
-          setChats(chats);
+          setChats(data);
+        }
+        if (data.length > 0) {
+          setActiveChatId(data[0]._id);
         }
       } catch (error) {
         console.error(error);
