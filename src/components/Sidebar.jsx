@@ -1,17 +1,20 @@
 import UserInfo from './UserInfo';
 import List from './List';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronLeft } from '@mdi/js';
+import { AuthContext } from './AuthContext';
 
-const Sidebar = () => {
-  const [chats, setChats] = useState(['The Gay Bois', 'The Not Gay Bois']);
+const Sidebar = (props) => {
   const [activeItem, setActiveItem] = useState('global');
   const [visibility, setVisibility] = useState(true);
+  const { apiUrl, signout } = useContext(AuthContext);
 
-  const handleClick = (e) => {
+  const handleClick = (e, id) => {
     setActiveItem(e.currentTarget);
+    props.setActiveChatId(id);
+    console.log(props.activeChatId);
   };
 
   const handleVisibility = () => {
@@ -41,9 +44,11 @@ const Sidebar = () => {
         <ul>
           <li>
             <Link
-              // to="chats/global"
+              to="global"
               className={`list-primary ${activeItem === 'global' ? 'accent-primary' : ''}`}
-              onClick={() => handleClick({ currentTarget: 'global' })}
+              onClick={() =>
+                handleClick({ currentTarget: 'global' }, props.chats[0]._id)
+              }
             >
               Global Chat
             </Link>
@@ -51,17 +56,22 @@ const Sidebar = () => {
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
             <List heading="Private Chats">
-              {chats.map((chat, index) => {
-                return (
-                  <Link
-                    // to="chats/:chatId"
-                    key={index}
-                    className={`list-secondary ${activeItem === chat && 'accent-primary'}`}
-                    onClick={() => handleClick({ currentTarget: chat })}
-                  >
-                    {chat}
-                  </Link>
-                );
+              {props.chats.map((chat) => {
+                if (chat.name !== 'global') {
+                  return (
+                    <Link
+                      to={`/chats/${chat.name}`}
+                      key={chat.name}
+                      id={chat._id}
+                      className={`list-secondary ${activeItem === chat.name && 'accent-primary'}`}
+                      onClick={() =>
+                        handleClick({ currentTarget: chat.name }, chat._id)
+                      }
+                    >
+                      {chat.name}
+                    </Link>
+                  );
+                }
               })}
             </List>
           </li>
@@ -82,9 +92,9 @@ const Sidebar = () => {
               >
                 Security
               </Link>
-              <form action="/signin">
+              <form action="/signin" onSubmit={signout}>
                 <button className="list-secondary" type="submit">
-                  Logout
+                  Sign out
                 </button>
               </form>
             </List>

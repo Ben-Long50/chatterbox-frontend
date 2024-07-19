@@ -28,6 +28,6 @@
     @apply text-primary w-fit max-w-xl rounded bg-gray-200 p-3 dark:bg-gray-900;
   }
   .message-sent {
-    @apply w-fit max-w-xl rounded bg-yellow-200 p-2 text-gray-900;
+    @apply w-fit max-w-xl self-end rounded bg-yellow-200 p-2 text-gray-900;
   }
 }

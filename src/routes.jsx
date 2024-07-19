@@ -4,6 +4,7 @@ import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
+  Navigate,
 } from 'react-router-dom';
 import AuthLayout from './components/AuthLayout';
 import SignupForm from './components/SignupForm';
@@ -18,8 +19,9 @@ const router = createBrowserRouter(
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/signin" element={<SigninForm />} />
       </Route>
-      <Route path="home" element={<MainLayout />}>
-        <Route index element={<Chat />} />
+      <Route path="/chats" element={<MainLayout />}>
+        <Route index element={<Navigate to="global" replace />} />
+        <Route path=":chatName" element={<Chat />} />
       </Route>
     </Route>,
   ),

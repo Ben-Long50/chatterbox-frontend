@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import { createContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthContext = createContext();
 
@@ -7,8 +8,18 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     return token ? true : false;
   });
+  const [userId, setUserId] = useState(null);
 
-  const apiUrl = 'http:/localhost:3000';
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const userToken = jwtDecode(token);
+      const currentUserId = userToken.user._id;
+      setUserId(currentUserId);
+    }
+  }, [isAuthenticated]);
+
+  const apiUrl = 'http://localhost:3000';
 
   const signin = () => {
     setIsAuthenticated(true);
@@ -20,7 +31,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signin, signout, apiUrl }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, signin, signout, apiUrl, userId }}
+    >
       {children}
     </AuthContext.Provider>
   );
