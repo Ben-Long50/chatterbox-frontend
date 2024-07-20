@@ -8,7 +8,11 @@ import MessageSent from './MessageSent';
 import MessageReceived from './MessageReceived';
 
 const Chat = () => {
-  const [chatInfo, setChatInfo] = useState({ name: '', messages: [] });
+  const [chatInfo, setChatInfo] = useState({
+    name: '',
+    messages: [],
+    members: [],
+  });
   const [draft, setDraft] = useState('');
   const [activeChatId, setActiveChatId, visibility] = useOutletContext();
   const { apiUrl, userId } = useContext(AuthContext);
@@ -71,14 +75,25 @@ const Chat = () => {
 
   return (
     <div
-      className={`container row-start-1 flex max-w-screen-xl flex-col justify-between max-md:col-start-1 max-md:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
+      className={`container row-start-1 flex max-w-screen-xl flex-col justify-between max-lg:col-start-1 max-lg:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
-      <div className="sticky top-0 w-full bg-gradient-to-b from-white from-10% to-transparent dark:from-gray-700">
-        <h1 className="text-primary mb-40 pt-8 text-center text-4xl font-semibold">
+      <div className="sticky top-0 flex w-full justify-center bg-gradient-to-b from-white from-10% to-transparent pt-8 dark:from-gray-700">
+        {chatInfo.members.map((member, index) => {
+          console.log(member);
+          return (
+            <div
+              key={index}
+              className={`${index > 0 && '-ml-1.5'} text-primary flex size-12 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-3xl ring-2 ring-white dark:bg-gray-900 dark:ring-gray-700`}
+            >
+              <p>{member.username[0].toUpperCase()}</p>
+            </div>
+          );
+        })}
+        <h1 className="text-primary mb-40 ml-4 mt-1 text-center text-4xl font-semibold">
           {chatInfo.name}
         </h1>
       </div>
-      <div className="mt-auto gap-1 pb-8">
+      <div className="mt-auto gap-1 overflow-y-auto pb-4 lg:pb-8">
         {chatInfo.messages.map((message, index) => {
           const isNewDate =
             index === 0 ||
@@ -109,12 +124,12 @@ const Chat = () => {
         })}
         <form
           method="post"
-          className="ml-auto mr-auto mt-12 flex w-1/2 min-w-80 items-center gap-6 max-md:gap-3"
+          className="mt-12 flex items-center justify-center gap-6 max-md:gap-3 md:ml-auto md:mr-auto"
           onSubmit={handleSubmit}
         >
           <input
             ref={inputRef}
-            className="text-primary w-full rounded bg-gray-200 p-3 dark:bg-gray-900"
+            className="text-primary w-full max-w-xl rounded bg-gray-200 p-3 dark:bg-gray-900"
             type="text"
             placeholder="The world awaits your message..."
             onChange={handleChange}

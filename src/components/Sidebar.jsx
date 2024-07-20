@@ -3,7 +3,7 @@ import List from './List';
 import { Link } from 'react-router-dom';
 import { useState, useContext, useRef } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronLeft, mdiMinus, mdiPlus } from '@mdi/js';
+import { mdiChevronLeft, mdiMinus, mdiPlus, mdiTrashCanOutline } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 
 const Sidebar = (props) => {
@@ -123,23 +123,23 @@ const Sidebar = (props) => {
 
   return (
     <div
-      className={`z-10 col-end-2 row-start-1 flex h-screen flex-col justify-between bg-gray-100 transition duration-300 max-sm:col-start-1 max-sm:col-end-3 dark:bg-gray-900 ${!props.visibility && '-translate-x-full'} sticky top-0`}
+      className={`z-10 col-end-2 row-start-1 flex h-dvh flex-col justify-between bg-gray-100 transition duration-300 max-sm:col-start-1 max-sm:col-end-3 dark:bg-gray-900 ${!props.visibility && '-translate-x-full'} sticky top-0`}
     >
-      <div className="px-4 py-6">
+      <button
+        className={`accent-primary absolute right-4 top-4 z-50 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
+        onClick={props.handleVisibility}
+      >
+        <Icon
+          path={mdiChevronLeft}
+          size={1.75}
+          className={`text-inherit transition duration-300 ${!props.visibility && 'rotate-180'}`}
+        ></Icon>
+      </button>
+      <div className="overflow-y-auto px-4 py-6">
         <div className="mb-5 flex items-center justify-between pl-2">
           <h1 className="text-primary place-content-center text-3xl font-semibold">
             Chatterbox
           </h1>
-          <button
-            className={`accent-primary z-50 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
-            onClick={props.handleVisibility}
-          >
-            <Icon
-              path={mdiChevronLeft}
-              size={1.75}
-              className={`text-inherit transition duration-300 ${!props.visibility && 'rotate-180'}`}
-            ></Icon>
-          </button>
         </div>
         <ul>
           <li>
@@ -166,22 +166,33 @@ const Sidebar = (props) => {
                       <Link
                         to={`/chats/${chat.name}`}
                         id={chat._id}
-                        className="mr-auto box-border flex-grow p-3"
+                        className="mr-auto box-border flex flex-grow items-center p-3"
                         onClick={() =>
                           handleClick({ currentTarget: chat.name }, chat._id)
                         }
                       >
-                        <p>{chat.name}</p>
+                        {chat.members.map((member, index) => {
+                          console.log(member);
+                          return (
+                            <div
+                              key={index}
+                              className={`${index > 0 && '-ml-1.5'} text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl ring-2 transition duration-300 dark:bg-gray-700 ${activeItem === chat.name ? 'ring-yellow-200 group-hover/chat:ring-yellow-300' : 'ring-gray-100 group-hover/chat:ring-gray-200 dark:ring-gray-900 group-hover/chat:dark:ring-gray-800'}`}
+                            >
+                              <p>{member.username[0].toUpperCase()}</p>
+                            </div>
+                          );
+                        })}
+                        <p className="ml-2">{chat.name}</p>
                       </Link>
                       {activeItem !== chat.name && (
                         <button
                           type="submit"
-                          className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                          className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                           onClick={() => deleteChat(chat._id)}
                         >
                           <Icon
-                            className="group-hover/chat:text-secondary text-transparent"
-                            path={mdiMinus}
+                            className="group-hover/chat:text-secondary text-transparent transition duration-300"
+                            path={mdiTrashCanOutline}
                             size={1.2}
                           ></Icon>
                         </button>
@@ -205,7 +216,7 @@ const Sidebar = (props) => {
                   />
                   <button
                     type="submit"
-                    className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="-mx-2 -my-3 rounded-full p-1 transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                   >
                     <Icon
                       className="text-secondary"
@@ -237,7 +248,7 @@ const Sidebar = (props) => {
                         )
                       }
                     >
-                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-white object-cover text-center text-2xl dark:bg-gray-700">
+                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                         <p>{friend.username[0].toUpperCase()}</p>
                       </div>
                       <p>{friend.username}</p>
@@ -245,11 +256,11 @@ const Sidebar = (props) => {
                     {activeItem !== 'global' && (
                       <button
                         type="submit"
-                        className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                        className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                         onClick={() => addFriendToChat(friend._id)}
                       >
                         <Icon
-                          className="group-hover/friend:text-secondary text-transparent"
+                          className="group-hover/friend:text-secondary text-transparent transition duration-300"
                           path={mdiPlus}
                           size={1.2}
                         ></Icon>
@@ -257,11 +268,11 @@ const Sidebar = (props) => {
                     )}
                     <button
                       type="submit"
-                      className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                       onClick={() => removeFriend(friend._id)}
                     >
                       <Icon
-                        className="group-hover/friend:text-secondary text-transparent"
+                        className="group-hover/friend:text-secondary text-transparent transition duration-300"
                         path={mdiMinus}
                         size={1.2}
                       ></Icon>
@@ -288,18 +299,18 @@ const Sidebar = (props) => {
                         handleClick({ currentTarget: user.username }, user._id)
                       }
                     >
-                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-white object-cover text-center text-2xl dark:bg-gray-700">
+                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                         <p>{user.username[0].toUpperCase()}</p>
                       </div>
                       <p>{user.username}</p>
                     </Link>
                     <button
                       type="submit"
-                      className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
                       onClick={() => addUserAsFriend(user._id)}
                     >
                       <Icon
-                        className="group-hover/user:text-secondary text-transparent"
+                        className="group-hover/user:text-secondary text-transparent transition duration-300"
                         path={mdiPlus}
                         size={1.2}
                       ></Icon>

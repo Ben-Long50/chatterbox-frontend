@@ -40,9 +40,7 @@ const MainLayout = () => {
   }, [userId]);
 
   const handleVisibility = () => {
-    console.log('Current visibility:', visibility); // Debug log
     setVisibility((prevVisibility) => !prevVisibility);
-    console.log('Updated visibility:', !visibility); // Debug log
   };
 
   const fetchChats = async (token, userId) => {
