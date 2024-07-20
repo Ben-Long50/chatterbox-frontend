@@ -16,10 +16,10 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       <Route element={<AuthLayout />}>
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/signin" element={<SigninForm />} />
+        <Route path="signup" element={<SignupForm />} />
+        <Route index path="signin" element={<SigninForm />} />
       </Route>
-      <Route path="/chats" element={<MainLayout />}>
+      <Route path="chats" element={<MainLayout />}>
         <Route index element={<Navigate to="global" replace />} />
         <Route path=":chatName" element={<Chat />} />
       </Route>

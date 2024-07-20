@@ -25,9 +25,10 @@
     @apply transform-gpu bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-300 dark:border-none dark:shadow-black;
   }
   .message-received {
-    @apply text-primary w-fit max-w-xl rounded bg-gray-200 p-3 dark:bg-gray-900;
+    @apply text-primary my-2 mr-auto max-w-xl rounded-4xl bg-gray-200 p-1 dark:bg-gray-900;
   }
   .message-sent {
-    @apply w-fit max-w-xl self-end rounded bg-yellow-200 p-3 text-gray-900;
+    @apply my-2 ml-auto max-w-xl rounded-4xl bg-yellow-200 p-1 text-gray-900;
   }
 }
+/* max-w-xl */

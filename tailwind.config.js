@@ -16,6 +16,9 @@ export default {
       spacing: {
         180: '180%',
       },
+      borderRadius: {
+        '4xl': '1.625rem',
+      },
     },
   },
   plugins: [],

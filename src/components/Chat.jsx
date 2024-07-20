@@ -4,6 +4,8 @@ import { useState, useRef, useEffect, useContext } from 'react';
 import { format } from 'date-fns';
 import { AuthContext } from './AuthContext';
 import { useOutletContext } from 'react-router-dom';
+import MessageSent from './MessageSent';
+import MessageReceived from './MessageReceived';
 
 const Chat = () => {
   const [chatInfo, setChatInfo] = useState({ name: '', messages: [] });
@@ -12,6 +14,10 @@ const Chat = () => {
   const { apiUrl, userId } = useContext(AuthContext);
 
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -66,12 +72,12 @@ const Chat = () => {
   return (
     <>
       <div className="container flex max-w-screen-xl flex-col justify-between">
-        <div className="top-0 h-1/4 w-full bg-gradient-to-b from-white from-5% to-transparent dark:from-gray-700">
-          <h1 className="pt-8 text-center text-4xl font-semibold">
+        <div className="sticky top-0 w-full bg-gradient-to-b from-white from-10% to-transparent dark:from-gray-700">
+          <h1 className="text-primary mb-40 pt-8 text-center text-4xl font-semibold">
             {chatInfo.name}
           </h1>
         </div>
-        <div className="mt-auto flex flex-col gap-1 pb-8 pt-48">
+        <div className="mt-auto gap-1 pb-8">
           {chatInfo.messages.map((message, index) => {
             const isNewDate =
               index === 0 ||
@@ -80,31 +86,23 @@ const Chat = () => {
             return (
               <>
                 {isNewDate && (
-                  <p className="text-tertiary self-center text-sm">
+                  <p className="text-tertiary text-center text-sm">
                     {format(message.date, 'PP')}
                   </p>
                 )}
-
-                <div
-                  key={index}
-                  className={`group flex flex-col ${message.author._id === userId ? 'self-end' : 'self-start'}`}
-                >
-                  <p
-                    className={`text-tertiary text-xs ${message.author._id === userId ? 'text-right' : 'text-left'}`}
-                  >
-                    {message.author.username}
-                  </p>
-                  <div
-                    className={`my-2 ${message.author._id === userId ? 'message-sent' : 'message-received'}`}
-                  >
-                    <p className="text-inherit">{message.body}</p>
-                  </div>
-                  <p
-                    className={`text-tertiary invisible text-xs group-hover:visible ${message.author._id === userId ? 'text-right' : 'text-left'}`}
-                  >
-                    {format(message.date, 'pp')}
-                  </p>
-                </div>
+                {message.author._id === userId ? (
+                  <MessageSent
+                    body={message.body}
+                    author={message.author}
+                    date={message.date}
+                  />
+                ) : (
+                  <MessageReceived
+                    body={message.body}
+                    author={message.author}
+                    date={message.date}
+                  />
+                )}
               </>
             );
           })}

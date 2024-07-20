@@ -52,6 +52,27 @@ const Sidebar = (props) => {
     }
   };
 
+  const addFriendToChat = async (friendId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(
+        `${apiUrl}/chats/${props.activeChatId}/members`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ friendId }),
+        },
+      );
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`flex h-screen max-w-md flex-grow flex-col justify-between border-e border-none bg-gray-100 transition duration-300 dark:bg-gray-900 ${!visibility && '-translate-x-full'} sticky top-0`}
@@ -111,20 +132,68 @@ const Sidebar = (props) => {
                   className="my-4 flex items-center justify-start gap-4"
                   onSubmit={createChat}
                 >
-                  <button
-                    className={`accent-primary ml-3 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!visibility && 'translate-x-180'}`}
-                  >
-                    <Icon path={mdiPlus} size={1.5} />
-                  </button>
                   <input
                     ref={chatNameRef}
-                    className="text-primary w-full rounded bg-gray-200 p-2 dark:bg-gray-900"
+                    className="text-primary w-full rounded bg-gray-200 p-2 dark:bg-gray-700"
                     type="text"
                     placeholder="New chat name"
                     onChange={handleChange}
                   />
+                  <button
+                    type="submit"
+                    className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <Icon
+                      className="text-secondary"
+                      path={mdiPlus}
+                      size={1.2}
+                    ></Icon>
+                  </button>
                 </form>
               </li>
+            </List>
+          </li>
+          <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
+          <li>
+            <List heading="Friends">
+              {props.friends.map((friend) => {
+                return (
+                  <li
+                    key={friend._id}
+                    className="list-secondary group flex items-center justify-between"
+                  >
+                    <Link
+                      to={`/users/${friend.username}`}
+                      id={friend._id}
+                      className={`flex items-center gap-4 ${activeItem === friend.username && 'accent-primary'}`}
+                      onClick={() =>
+                        handleClick(
+                          { currentTarget: friend.username },
+                          friend._id,
+                        )
+                      }
+                    >
+                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-white object-cover text-center text-2xl dark:bg-gray-700">
+                        <p>{friend.username[0].toUpperCase()}</p>
+                      </div>
+                      <p>{friend.username}</p>
+                    </Link>
+                    {activeItem !== 'global' && (
+                      <button
+                        type="submit"
+                        className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                        onClick={() => addFriendToChat(friend._id)}
+                      >
+                        <Icon
+                          className="group-hover:text-secondary text-transparent"
+                          path={mdiPlus}
+                          size={1.2}
+                        ></Icon>
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
             </List>
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />

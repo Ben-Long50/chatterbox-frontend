@@ -9,13 +9,16 @@ const AuthProvider = ({ children }) => {
     return token ? true : false;
   });
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const userToken = jwtDecode(token);
       const currentUserId = userToken.user._id;
+      const currentUsername = userToken.user.username;
       setUserId(currentUserId);
+      setUsername(currentUsername);
     }
   }, [isAuthenticated]);
 
@@ -32,7 +35,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, signin, signout, apiUrl, userId }}
+      value={{ isAuthenticated, signin, signout, apiUrl, userId, username }}
     >
       {children}
     </AuthContext.Provider>
