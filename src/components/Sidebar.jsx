@@ -3,7 +3,7 @@ import List from './List';
 import { Link } from 'react-router-dom';
 import { useState, useContext, useRef } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronLeft, mdiPlus } from '@mdi/js';
+import { mdiChevronLeft, mdiMinus, mdiPlus } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 
 const Sidebar = (props) => {
@@ -17,7 +17,6 @@ const Sidebar = (props) => {
   const handleClick = (e, id) => {
     setActiveItem(e.currentTarget);
     props.setActiveChatId(id);
-    console.log(props.activeChatId);
   };
 
   const handleVisibility = () => {
@@ -73,9 +72,45 @@ const Sidebar = (props) => {
     }
   };
 
+  const addUserAsFriend = async (newFriendId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ newFriendId }),
+      });
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteChat = async (chatId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/chats/${chatId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ chatId }),
+      });
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
-      className={`flex h-screen max-w-md flex-grow flex-col justify-between border-e border-none bg-gray-100 transition duration-300 dark:bg-gray-900 ${!visibility && '-translate-x-full'} sticky top-0`}
+      className={`flex h-screen max-w-md flex-grow flex-col justify-between border-e border-none bg-gray-100 transition duration-300 dark:bg-gray-900 ${!visibility && '-translate-x-full'} sticky top-0 overflow-y-auto`}
     >
       <div className="px-4 py-6">
         <div className="mb-5 flex items-center justify-between pl-2">
@@ -111,17 +146,33 @@ const Sidebar = (props) => {
               {props.chats.map((chat) => {
                 if (chat.name !== 'Global') {
                   return (
-                    <li key={chat.name}>
+                    <li
+                      key={chat.name}
+                      className={`list-secondary group/chat flex items-center ${activeItem === chat.name && 'accent-primary'}`}
+                    >
                       <Link
                         to={`/chats/${chat.name}`}
                         id={chat._id}
-                        className={`list-secondary ${activeItem === chat.name && 'accent-primary'}`}
+                        className="mr-auto box-border flex-grow p-3"
                         onClick={() =>
                           handleClick({ currentTarget: chat.name }, chat._id)
                         }
                       >
-                        {chat.name}
+                        <p>{chat.name}</p>
                       </Link>
+                      {activeItem !== chat.name && (
+                        <button
+                          type="submit"
+                          className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                          onClick={() => deleteChat(chat._id)}
+                        >
+                          <Icon
+                            className="group-hover/chat:text-secondary text-transparent"
+                            path={mdiMinus}
+                            size={1.2}
+                          ></Icon>
+                        </button>
+                      )}
                     </li>
                   );
                 }
@@ -160,12 +211,12 @@ const Sidebar = (props) => {
                 return (
                   <li
                     key={friend._id}
-                    className="list-secondary group flex items-center justify-between"
+                    className="list-secondary group/friend flex items-center justify-between"
                   >
                     <Link
                       to={`/users/${friend.username}`}
                       id={friend._id}
-                      className={`flex items-center gap-4 ${activeItem === friend.username && 'accent-primary'}`}
+                      className={`flex flex-grow items-center gap-4 p-3 ${activeItem === friend.username && 'accent-primary'}`}
                       onClick={() =>
                         handleClick(
                           { currentTarget: friend.username },
@@ -185,12 +236,50 @@ const Sidebar = (props) => {
                         onClick={() => addFriendToChat(friend._id)}
                       >
                         <Icon
-                          className="group-hover:text-secondary text-transparent"
+                          className="group-hover/friend:text-secondary text-transparent"
                           path={mdiPlus}
                           size={1.2}
                         ></Icon>
                       </button>
                     )}
+                  </li>
+                );
+              })}
+            </List>
+          </li>
+          <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
+          <li>
+            <List heading="All Members">
+              {props.allUsers.map((user) => {
+                return (
+                  <li
+                    key={user._id}
+                    className="list-secondary group/user flex items-center"
+                  >
+                    <Link
+                      to={`/users/${user.username}`}
+                      id={user._id}
+                      className={`box-border flex flex-grow items-center gap-4 p-3 ${activeItem === user.username && 'accent-primary'}`}
+                      onClick={() =>
+                        handleClick({ currentTarget: user.username }, user._id)
+                      }
+                    >
+                      <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-white object-cover text-center text-2xl dark:bg-gray-700">
+                        <p>{user.username[0].toUpperCase()}</p>
+                      </div>
+                      <p>{user.username}</p>
+                    </Link>
+                    <button
+                      type="submit"
+                      className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      onClick={() => addUserAsFriend(user._id)}
+                    >
+                      <Icon
+                        className="group-hover/user:text-secondary text-transparent"
+                        path={mdiPlus}
+                        size={1.2}
+                      ></Icon>
+                    </button>
                   </li>
                 );
               })}

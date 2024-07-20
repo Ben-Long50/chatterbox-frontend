@@ -6,6 +6,7 @@ import { AuthContext } from './AuthContext';
 const MainLayout = () => {
   const [chats, setChats] = useState([]);
   const [friends, setFriends] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [activeChatId, setActiveChatId] = useState(null);
   const { apiUrl, userId } = useContext(AuthContext);
 
@@ -13,9 +14,10 @@ const MainLayout = () => {
     const token = localStorage.getItem('token');
     const fetchData = async () => {
       try {
-        const [chatsData, freindsData] = await Promise.all([
+        const [chatsData, freindsData, userData] = await Promise.all([
           fetchChats(token, userId),
           fetchFriends(token, userId),
+          fetchUsers(token),
         ]);
 
         if (chatsData.length > 0) {
@@ -24,6 +26,9 @@ const MainLayout = () => {
         }
         if (freindsData.length > 0) {
           setFriends(freindsData);
+        }
+        if (userData.length > 0) {
+          setAllUsers(userData);
         }
       } catch (error) {
         console.error(error);
@@ -63,11 +68,27 @@ const MainLayout = () => {
     }
   };
 
+  const fetchUsers = async (token) => {
+    try {
+      const response = await fetch(`${apiUrl}/users`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex bg-white dark:bg-gray-700">
       <Sidebar
         chats={chats}
         friends={friends}
+        allUsers={allUsers}
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
       />
