@@ -108,6 +108,24 @@ const Sidebar = (props) => {
     }
   };
 
+  const removeFriend = async (friendId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ friendId }),
+      });
+      const result = await response.json();
+      console.log(result.message);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div
       className={`flex h-screen max-w-md flex-grow flex-col justify-between border-e border-none bg-gray-100 transition duration-300 dark:bg-gray-900 ${!visibility && '-translate-x-full'} sticky top-0 overflow-y-auto`}
@@ -242,6 +260,17 @@ const Sidebar = (props) => {
                         ></Icon>
                       </button>
                     )}
+                    <button
+                      type="submit"
+                      className="-mx-3 -my-3 ml-2 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      onClick={() => removeFriend(friend._id)}
+                    >
+                      <Icon
+                        className="group-hover/friend:text-secondary text-transparent"
+                        path={mdiMinus}
+                        size={1.2}
+                      ></Icon>
+                    </button>
                   </li>
                 );
               })}
@@ -290,20 +319,20 @@ const Sidebar = (props) => {
             <List heading="Account">
               <Link
                 // to="accout/details"
-                className={`list-secondary ${activeItem === 'details' && 'accent-primary'}`}
+                className={`list-secondary flex-grow p-3 ${activeItem === 'details' && 'accent-primary'}`}
                 onClick={() => handleClick({ currentTarget: 'details' })}
               >
                 Details
               </Link>
               <Link
                 // to="account/security"
-                className={`list-secondary ${activeItem === 'security' && 'accent-primary'}`}
+                className={`list-secondary flex-grow p-3 ${activeItem === 'security' && 'accent-primary'}`}
                 onClick={() => handleClick({ currentTarget: 'security' })}
               >
                 Security
               </Link>
               <form action="/signin" onSubmit={signout}>
-                <button className="list-secondary" type="submit">
+                <button className="list-secondary flex-grow p-3" type="submit">
                   Sign out
                 </button>
               </form>
