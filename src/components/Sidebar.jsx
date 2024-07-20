@@ -8,7 +8,6 @@ import { AuthContext } from './AuthContext';
 
 const Sidebar = (props) => {
   const [activeItem, setActiveItem] = useState('global');
-  const [visibility, setVisibility] = useState(true);
   const [input, setInput] = useState('');
   const { apiUrl, signout, userId } = useContext(AuthContext);
 
@@ -17,10 +16,6 @@ const Sidebar = (props) => {
   const handleClick = (e, id) => {
     setActiveItem(e.currentTarget);
     props.setActiveChatId(id);
-  };
-
-  const handleVisibility = () => {
-    setVisibility(!visibility);
   };
 
   const handleChange = (e) => {
@@ -128,23 +123,23 @@ const Sidebar = (props) => {
 
   return (
     <div
-      className={`flex h-screen max-w-md flex-grow flex-col justify-between border-e border-none bg-gray-100 transition duration-300 dark:bg-gray-900 ${!visibility && '-translate-x-full'} sticky top-0 overflow-y-auto`}
+      className={`z-10 col-end-2 row-start-1 flex h-screen flex-col justify-between bg-gray-100 transition duration-300 max-sm:col-start-1 max-sm:col-end-3 dark:bg-gray-900 ${!props.visibility && '-translate-x-full'} sticky top-0`}
     >
       <div className="px-4 py-6">
         <div className="mb-5 flex items-center justify-between pl-2">
           <h1 className="text-primary place-content-center text-3xl font-semibold">
             Chatterbox
           </h1>
-          <span
-            className={`accent-primary grid shrink-0 place-content-center rounded-full hover:scale-110 ${!visibility && 'translate-x-180'}`}
+          <button
+            className={`accent-primary z-50 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
+            onClick={props.handleVisibility}
           >
             <Icon
               path={mdiChevronLeft}
               size={1.75}
-              className={`text-inherit transition duration-300 ${!visibility && 'rotate-180'}`}
-              onClick={handleVisibility}
+              className={`text-inherit transition duration-300 ${!props.visibility && 'rotate-180'}`}
             ></Icon>
-          </span>
+          </button>
         </div>
         <ul>
           <li>
@@ -229,7 +224,7 @@ const Sidebar = (props) => {
                 return (
                   <li
                     key={friend._id}
-                    className="list-secondary group/friend flex items-center justify-between"
+                    className="list-secondary group/friend flex items-center"
                   >
                     <Link
                       to={`/users/${friend.username}`}
@@ -250,7 +245,7 @@ const Sidebar = (props) => {
                     {activeItem !== 'global' && (
                       <button
                         type="submit"
-                        className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                        className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
                         onClick={() => addFriendToChat(friend._id)}
                       >
                         <Icon
@@ -262,7 +257,7 @@ const Sidebar = (props) => {
                     )}
                     <button
                       type="submit"
-                      className="-mx-3 -my-3 ml-2 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
                       onClick={() => removeFriend(friend._id)}
                     >
                       <Icon
@@ -300,7 +295,7 @@ const Sidebar = (props) => {
                     </Link>
                     <button
                       type="submit"
-                      className="-mx-2 -my-3 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
+                      className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-900"
                       onClick={() => addUserAsFriend(user._id)}
                     >
                       <Icon
@@ -318,14 +313,12 @@ const Sidebar = (props) => {
           <li>
             <List heading="Account">
               <Link
-                // to="accout/details"
                 className={`list-secondary flex-grow p-3 ${activeItem === 'details' && 'accent-primary'}`}
                 onClick={() => handleClick({ currentTarget: 'details' })}
               >
                 Details
               </Link>
               <Link
-                // to="account/security"
                 className={`list-secondary flex-grow p-3 ${activeItem === 'security' && 'accent-primary'}`}
                 onClick={() => handleClick({ currentTarget: 'security' })}
               >

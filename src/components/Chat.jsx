@@ -10,7 +10,7 @@ import MessageReceived from './MessageReceived';
 const Chat = () => {
   const [chatInfo, setChatInfo] = useState({ name: '', messages: [] });
   const [draft, setDraft] = useState('');
-  const [activeChatId] = useOutletContext();
+  const [activeChatId, setActiveChatId, visibility] = useOutletContext();
   const { apiUrl, userId } = useContext(AuthContext);
 
   const inputRef = useRef(null);
@@ -70,71 +70,71 @@ const Chat = () => {
   };
 
   return (
-    <>
-      <div className="container flex max-w-screen-xl flex-col justify-between">
-        <div className="sticky top-0 w-full bg-gradient-to-b from-white from-10% to-transparent dark:from-gray-700">
-          <h1 className="text-primary mb-40 pt-8 text-center text-4xl font-semibold">
-            {chatInfo.name}
-          </h1>
-        </div>
-        <div className="mt-auto gap-1 pb-8">
-          {chatInfo.messages.map((message, index) => {
-            const isNewDate =
-              index === 0 ||
-              format(chatInfo.messages[index - 1].date, 'PP') !==
-                format(message.date, 'PP');
-            return (
-              <>
-                {isNewDate && (
-                  <p className="text-tertiary text-center text-sm">
-                    {format(message.date, 'PP')}
-                  </p>
-                )}
-                {message.author._id === userId ? (
-                  <MessageSent
-                    body={message.body}
-                    author={message.author}
-                    date={message.date}
-                  />
-                ) : (
-                  <MessageReceived
-                    body={message.body}
-                    author={message.author}
-                    date={message.date}
-                  />
-                )}
-              </>
-            );
-          })}
-          <form
-            method="post"
-            className="ml-auto mr-auto mt-12 flex w-1/2 min-w-96 items-center gap-6"
-            onSubmit={handleSubmit}
-          >
-            <input
-              ref={inputRef}
-              className="text-primary w-full rounded bg-gray-200 p-3 dark:bg-gray-900"
-              type="text"
-              placeholder="The world awaits your message..."
-              onChange={handleChange}
-            />
-            <button
-              type="submit"
-              className={
-                'accent-primary grid shrink-0 place-content-center rounded-full p-2 hover:scale-110'
-              }
-            >
-              <Icon
-                className="translate-x-10"
-                path={mdiSend}
-                size={1.25}
-                rotate={-45}
-              ></Icon>
-            </button>
-          </form>
-        </div>
+    <div
+      className={`container row-start-1 flex max-w-screen-xl flex-col justify-between max-md:col-start-1 max-md:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
+    >
+      <div className="sticky top-0 w-full bg-gradient-to-b from-white from-10% to-transparent dark:from-gray-700">
+        <h1 className="text-primary mb-40 pt-8 text-center text-4xl font-semibold">
+          {chatInfo.name}
+        </h1>
       </div>
-    </>
+      <div className="mt-auto gap-1 pb-8">
+        {chatInfo.messages.map((message, index) => {
+          const isNewDate =
+            index === 0 ||
+            format(chatInfo.messages[index - 1].date, 'PP') !==
+              format(message.date, 'PP');
+          return (
+            <>
+              {isNewDate && (
+                <p className="text-tertiary text-center text-sm">
+                  {format(message.date, 'PP')}
+                </p>
+              )}
+              {message.author._id === userId ? (
+                <MessageSent
+                  body={message.body}
+                  author={message.author}
+                  date={message.date}
+                />
+              ) : (
+                <MessageReceived
+                  body={message.body}
+                  author={message.author}
+                  date={message.date}
+                />
+              )}
+            </>
+          );
+        })}
+        <form
+          method="post"
+          className="ml-auto mr-auto mt-12 flex w-1/2 min-w-80 items-center gap-6 max-md:gap-3"
+          onSubmit={handleSubmit}
+        >
+          <input
+            ref={inputRef}
+            className="text-primary w-full rounded bg-gray-200 p-3 dark:bg-gray-900"
+            type="text"
+            placeholder="The world awaits your message..."
+            onChange={handleChange}
+          />
+          <button
+            type="submit"
+            className={
+              'accent-primary grid shrink-0 place-content-center rounded-full p-2 hover:scale-110'
+            }
+          >
+            <Icon
+              className="translate-x-10"
+              path={mdiSend}
+              size={1.25}
+              rotate={-45}
+            ></Icon>
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -9,6 +9,7 @@ const MainLayout = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [activeChatId, setActiveChatId] = useState(null);
   const { apiUrl, userId } = useContext(AuthContext);
+  const [visibility, setVisibility] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -37,6 +38,12 @@ const MainLayout = () => {
 
     fetchData();
   }, [userId]);
+
+  const handleVisibility = () => {
+    console.log('Current visibility:', visibility); // Debug log
+    setVisibility((prevVisibility) => !prevVisibility);
+    console.log('Updated visibility:', !visibility); // Debug log
+  };
 
   const fetchChats = async (token, userId) => {
     try {
@@ -84,15 +91,18 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="flex bg-white dark:bg-gray-700">
+    <div className="layout-cols grid grid-rows-1 bg-white dark:bg-gray-700">
       <Sidebar
         chats={chats}
         friends={friends}
         allUsers={allUsers}
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
+        visibility={visibility}
+        setVisibility={setVisibility}
+        handleVisibility={handleVisibility}
       />
-      <Outlet context={[activeChatId, setActiveChatId]} />
+      <Outlet context={[activeChatId, setActiveChatId, visibility]} />
     </div>
   );
 };
