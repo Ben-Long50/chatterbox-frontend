@@ -1,6 +1,7 @@
 import List from './List';
 import Icon from '@mdi/react';
 import { Link } from 'react-router-dom';
+import Label from './Label';
 import { mdiPlus, mdiMinus } from '@mdi/js';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
@@ -119,29 +120,19 @@ const FriendList = (props) => {
               <p>{friend.username}</p>
             </Link>
             {props.activeItem !== 'global' && (
-              <button
-                type="submit"
-                className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
+              <Label
+                className="group-hover/friend:text-secondary"
+                label="Add friend to active chat"
+                icon={mdiPlus}
                 onClick={() => addFriendToChat(friend._id)}
-              >
-                <Icon
-                  className="group-hover/friend:text-secondary text-transparent transition duration-300"
-                  path={mdiPlus}
-                  size={1.2}
-                ></Icon>
-              </button>
+              />
             )}
-            <button
-              type="submit"
-              className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
+            <Label
+              className="group-hover/friend:text-secondary"
+              label="Remove friend"
+              icon={mdiMinus}
               onClick={() => removeFriend(friend._id)}
-            >
-              <Icon
-                className="group-hover/friend:text-secondary text-transparent transition duration-300"
-                path={mdiMinus}
-                size={1.2}
-              ></Icon>
-            </button>
+            />
           </li>
         );
       })}

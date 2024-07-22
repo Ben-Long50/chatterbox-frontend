@@ -4,11 +4,12 @@ import Icon from '@mdi/react';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
 import { useContext, useRef } from 'react';
 import { AuthContext } from './AuthContext';
+import Label from './Label';
 
 const ChatList = (props) => {
   const { apiUrl, userId } = useContext(AuthContext);
 
-  const { inputRef } = useRef();
+  const inputRef = useRef(null);
 
   const createChat = async (e) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ const ChatList = (props) => {
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
-        props.chatNameRef.current.value = '';
+        inputRef.current.value = '';
       }
     } catch (error) {
       console.error(error);
@@ -82,17 +83,14 @@ const ChatList = (props) => {
                 <p className="ml-2">{chat.name}</p>
               </Link>
               {props.activeItem !== chat.name && (
-                <button
-                  type="submit"
-                  className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
-                  onClick={() => deleteChat(chat._id)}
-                >
-                  <Icon
-                    className="group-hover/chat:text-secondary text-transparent transition duration-300"
-                    path={mdiTrashCanOutline}
-                    size={1.2}
-                  ></Icon>
-                </button>
+                <Label
+                  className="group-hover/chat:text-secondary"
+                  label="Delete chat"
+                  icon={mdiTrashCanOutline}
+                  onClick={() => {
+                    deleteChat(chat._id);
+                  }}
+                />
               )}
             </li>
           );
@@ -101,7 +99,7 @@ const ChatList = (props) => {
       <li>
         <form
           method="post"
-          className="my-4 flex items-center justify-start gap-4"
+          className="my-2 flex items-center justify-start gap-4"
           onSubmit={createChat}
         >
           <input

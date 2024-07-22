@@ -1,6 +1,6 @@
 import List from './List';
 import { Link } from 'react-router-dom';
-import Icon from '@mdi/react';
+import Label from './Label';
 import { mdiPlus } from '@mdi/js';
 import { useContext, useState, useRef, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
@@ -16,7 +16,7 @@ const MemberList = (props) => {
     const token = localStorage.getItem('token');
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${apiUrl}/users`, {
+        const response = await fetch(`${apiUrl}/users?userId=${userId}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -32,7 +32,7 @@ const MemberList = (props) => {
       }
     };
     fetchUsers();
-  }, []);
+  }, [userId]);
 
   const handleChange = () => {
     if (inputRef.current.value == '') {
@@ -97,17 +97,12 @@ const MemberList = (props) => {
               </div>
               <p>{member.username}</p>
             </Link>
-            <button
-              type="submit"
-              className="rounded-full p-1 transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900"
+            <Label
+              className="group-hover/user:text-secondary"
+              label="Add friend"
+              icon={mdiPlus}
               onClick={() => addUserAsFriend(member._id)}
-            >
-              <Icon
-                className="group-hover/user:text-secondary text-transparent transition duration-300"
-                path={mdiPlus}
-                size={1.2}
-              ></Icon>
-            </button>
+            />
           </li>
         );
       })}
