@@ -15,21 +15,11 @@ const MainLayout = () => {
     const token = localStorage.getItem('token');
     const fetchData = async () => {
       try {
-        const [chatsData, freindsData, userData] = await Promise.all([
-          fetchChats(token, userId),
-          fetchFriends(token, userId),
-          fetchUsers(token),
-        ]);
+        const [chatsData] = await Promise.all([fetchChats(token, userId)]);
 
         if (chatsData.length > 0) {
           setChats(chatsData);
           setActiveChatId(chatsData[0]._id);
-        }
-        if (freindsData.length > 0) {
-          setFriends(freindsData);
-        }
-        if (userData.length > 0) {
-          setAllUsers(userData);
         }
       } catch (error) {
         console.error(error);
@@ -46,36 +36,6 @@ const MainLayout = () => {
   const fetchChats = async (token, userId) => {
     try {
       const response = await fetch(`${apiUrl}/users/${userId}/chats`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchFriends = async (token, userId) => {
-    try {
-      const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchUsers = async (token) => {
-    try {
-      const response = await fetch(`${apiUrl}/users`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

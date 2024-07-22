@@ -11,6 +11,7 @@ import SignupForm from './components/SignupForm';
 import SigninForm from './components/SigninForm';
 import MainLayout from './components/MainLayout';
 import Chat from './components/Chat';
+import ProfilePage from './components/ProfilePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,9 +20,10 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupForm />} />
         <Route index path="signin" element={<SigninForm />} />
       </Route>
-      <Route path="chats" element={<MainLayout />}>
-        <Route index element={<Navigate to="global" replace />} />
-        <Route path=":chatName" element={<Chat />} />
+      <Route path="/" element={<MainLayout />}>
+        <Route index element={<Navigate to="chats/global" replace />} />
+        <Route path="chats/:chatName" element={<Chat />} />
+        <Route path="users/:username" element={<ProfilePage />} />
       </Route>
     </Route>,
   ),

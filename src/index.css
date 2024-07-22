@@ -28,7 +28,7 @@
     @apply text-primary my-2 mr-auto max-w-xl rounded-4xl bg-gray-200 p-1 dark:bg-gray-900;
   }
   .message-sent {
-    @apply my-2 ml-auto max-w-xl rounded-4xl bg-yellow-200 p-1 text-gray-900;
+    @apply my-2 max-w-xl rounded-4xl bg-yellow-200 p-1 text-gray-900;
   }
   .layout-cols {
     grid-template-columns: minmax(300px, 28rem) auto;

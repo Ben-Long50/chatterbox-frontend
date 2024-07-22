@@ -79,7 +79,6 @@ const Chat = () => {
     >
       <div className="sticky top-0 flex w-full justify-center bg-gradient-to-b from-white from-10% to-transparent pt-8 dark:from-gray-700">
         {chatInfo.members.map((member, index) => {
-          console.log(member);
           return (
             <div
               key={index}
@@ -111,12 +110,16 @@ const Chat = () => {
                   body={message.body}
                   author={message.author}
                   date={message.date}
+                  id={message._id}
+                  chatId={activeChatId}
                 />
               ) : (
                 <MessageReceived
                   body={message.body}
                   author={message.author}
                   date={message.date}
+                  id={message._id}
+                  chatId={activeChatId}
                 />
               )}
             </>

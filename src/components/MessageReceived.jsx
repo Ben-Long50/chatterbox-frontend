@@ -21,7 +21,7 @@ const MessageReceived = (props) => {
           {props.body}
         </p>
       </div>
-      <p className="text-tertiary invisible text-left text-xs group-hover:visible">
+      <p className="text-tertiary group-hover:text-tertiary text-left text-xs text-transparent transition duration-300">
         {format(props.date, 'pp')}
       </p>
     </div>

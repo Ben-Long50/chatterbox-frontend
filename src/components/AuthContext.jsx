@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
     return token ? true : false;
   });
   const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
