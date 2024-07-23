@@ -121,14 +121,14 @@ const FriendList = (props) => {
             </Link>
             {props.activeItem !== 'global' && (
               <Label
-                className="group-hover/friend:text-secondary"
+                buttonClass={`${props.activeItem === friend.username && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
                 label="Add friend to active chat"
                 icon={mdiPlus}
                 onClick={() => addFriendToChat(friend._id)}
               />
             )}
             <Label
-              className="group-hover/friend:text-secondary"
+              buttonClass={`${props.activeItem === friend.username && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
               label="Remove friend"
               icon={mdiMinus}
               onClick={() => removeFriend(friend._id)}

@@ -41,7 +41,7 @@ const MessageSent = (props) => {
       </p>
       <div className="ml-auto flex items-center justify-end gap-4">
         <Label
-          className="group-hover/message:text-secondary"
+          buttonClass="group-hover/message:text-secondary"
           label="Delete message"
           icon={mdiTrashCanOutline}
           onClick={deleteMessage}

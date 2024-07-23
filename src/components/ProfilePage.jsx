@@ -32,7 +32,7 @@ const ProfilePage = () => {
       }
     };
     fetchBestFriends();
-  }, []);
+  }, [member]);
 
   return (
     <div

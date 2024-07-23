@@ -98,7 +98,7 @@ const MemberList = (props) => {
               <p>{member.username}</p>
             </Link>
             <Label
-              className="group-hover/user:text-secondary"
+              buttonClass={`${props.activeItem === member.username && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
               label="Add friend"
               icon={mdiPlus}
               onClick={() => addUserAsFriend(member._id)}

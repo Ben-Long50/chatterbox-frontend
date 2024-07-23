@@ -84,7 +84,7 @@ const ChatList = (props) => {
               </Link>
               {props.activeItem !== chat.name && (
                 <Label
-                  className="group-hover/chat:text-secondary"
+                  buttonClass={`${props.activeItem === chat.name && 'group-hover/chat:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/chat:text-secondary`}
                   label="Delete chat"
                   icon={mdiTrashCanOutline}
                   onClick={() => {
