@@ -7,7 +7,7 @@ import { AuthContext } from './AuthContext';
 const MessageSent = (props) => {
   const [boxWidth, setBoxWidth] = useState(null);
   const boxRef = useRef(null);
-  const { apiUrl } = useContext(AuthContext);
+  const { apiUrl, currentUser } = useContext(AuthContext);
 
   useEffect(() => {
     const boxRect = boxRef.current.getBoundingClientRect();
@@ -25,6 +25,7 @@ const MessageSent = (props) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
+          body: JSON.stringify({ userId: currentUser._id }),
         },
       );
       const result = await response.json();

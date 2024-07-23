@@ -8,7 +8,7 @@ import { AuthContext } from './AuthContext';
 const MemberList = (props) => {
   const [members, setMembers] = useState([]);
   const [filteredMembers, setFilteredMembers] = useState([]);
-  const { apiUrl, userId } = useContext(AuthContext);
+  const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
 
@@ -16,14 +16,18 @@ const MemberList = (props) => {
     const token = localStorage.getItem('token');
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${apiUrl}/users?userId=${userId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `${apiUrl}/users?userId=${currentUser._id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         const data = await response.json();
         if (response.ok) {
+          console.log(data);
           setMembers(data);
           setFilteredMembers(data);
         }
@@ -32,7 +36,7 @@ const MemberList = (props) => {
       }
     };
     fetchUsers();
-  }, [userId]);
+  }, [currentUser._id]);
 
   const handleChange = () => {
     if (inputRef.current.value == '') {
@@ -50,14 +54,17 @@ const MemberList = (props) => {
   const addUserAsFriend = async (newFriendId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${apiUrl}/users/${currentUser._id}/friends`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ newFriendId }),
         },
-        body: JSON.stringify({ newFriendId }),
-      });
+      );
       const result = await response.json();
       console.log(result.message);
     } catch (error) {

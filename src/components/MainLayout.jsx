@@ -5,17 +5,17 @@ import { AuthContext } from './AuthContext';
 
 const MainLayout = () => {
   const [chats, setChats] = useState([]);
-  const [friends, setFriends] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
-  const [activeChatId, setActiveChatId] = useState(null);
-  const { apiUrl, userId } = useContext(AuthContext);
+  const [activeChatId, setActiveChatId] = useState('');
+  const { apiUrl, currentUser } = useContext(AuthContext);
   const [visibility, setVisibility] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const fetchData = async () => {
       try {
-        const [chatsData] = await Promise.all([fetchChats(token, userId)]);
+        const [chatsData] = await Promise.all([
+          fetchChats(token, currentUser._id),
+        ]);
 
         if (chatsData.length > 0) {
           setChats(chatsData);
@@ -27,7 +27,7 @@ const MainLayout = () => {
     };
 
     fetchData();
-  }, [userId]);
+  }, [currentUser._id]);
 
   const handleVisibility = () => {
     setVisibility((prevVisibility) => !prevVisibility);
@@ -52,8 +52,6 @@ const MainLayout = () => {
     <div className="layout-cols grid grid-rows-1 bg-white dark:bg-gray-700">
       <Sidebar
         chats={chats}
-        friends={friends}
-        allUsers={allUsers}
         activeChatId={activeChatId}
         setActiveChatId={setActiveChatId}
         visibility={visibility}

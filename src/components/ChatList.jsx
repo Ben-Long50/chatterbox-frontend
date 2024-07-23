@@ -7,14 +7,14 @@ import { AuthContext } from './AuthContext';
 import Label from './Label';
 
 const ChatList = (props) => {
-  const { apiUrl, userId } = useContext(AuthContext);
+  const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
 
   const createChat = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const chat = { name: inputRef.current.value, author: userId };
+    const chat = { name: inputRef.current.value, author: currentUser._id };
 
     try {
       const response = await fetch(`${apiUrl}/chats`, {
@@ -66,9 +66,10 @@ const ChatList = (props) => {
                 to={`/chats/${chat.name}`}
                 id={chat._id}
                 className="mr-auto box-border flex flex-grow items-center p-3"
-                onClick={() =>
-                  props.handleClick({ currentTarget: chat.name }, chat._id)
-                }
+                onClick={() => {
+                  props.handleClick({ currentTarget: chat.name });
+                  props.handleChatId(chat._id);
+                }}
               >
                 {chat.members.map((member, index) => {
                   return (

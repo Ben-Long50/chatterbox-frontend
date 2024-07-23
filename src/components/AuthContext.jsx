@@ -8,17 +8,14 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     return token ? true : false;
   });
-  const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState('');
+  const [currentUser, setCurrentUser] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       const userToken = jwtDecode(token);
-      const currentUserId = userToken.user._id;
-      const currentUsername = userToken.user.username;
-      setUserId(currentUserId);
-      setUsername(currentUsername);
+      const user = userToken.user;
+      setCurrentUser(user);
     }
   }, [isAuthenticated]);
 
@@ -35,7 +32,13 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, signin, signout, apiUrl, userId, username }}
+      value={{
+        isAuthenticated,
+        signin,
+        signout,
+        apiUrl,
+        currentUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

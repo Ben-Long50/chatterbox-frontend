@@ -1,5 +1,4 @@
 import List from './List';
-import Icon from '@mdi/react';
 import { Link } from 'react-router-dom';
 import Label from './Label';
 import { mdiPlus, mdiMinus } from '@mdi/js';
@@ -9,7 +8,7 @@ import { AuthContext } from './AuthContext';
 const FriendList = (props) => {
   const [friends, setFriends] = useState([]);
   const [filteredFriends, setFilteredFriends] = useState([]);
-  const { apiUrl, userId } = useContext(AuthContext);
+  const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
 
@@ -17,12 +16,15 @@ const FriendList = (props) => {
     const token = localStorage.getItem('token');
     const fetchFriends = async () => {
       try {
-        const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          `${apiUrl}/users/${currentUser._id}/friends`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
         const data = await response.json();
         if (response.ok) {
           setFriends(data);
@@ -33,7 +35,7 @@ const FriendList = (props) => {
       }
     };
     fetchFriends();
-  }, [userId]);
+  }, [currentUser._id]);
 
   const handleChange = () => {
     if (inputRef.current.value === '') {
@@ -72,14 +74,17 @@ const FriendList = (props) => {
   const removeFriend = async (friendId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/users/${userId}/friends`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        `${apiUrl}/users/${currentUser._id}/friends`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ friendId }),
         },
-        body: JSON.stringify({ friendId }),
-      });
+      );
       const result = await response.json();
       console.log(result.message);
     } catch (error) {

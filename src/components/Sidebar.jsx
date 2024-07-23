@@ -15,9 +15,13 @@ const Sidebar = (props) => {
   const [activeItem, setActiveItem] = useState('global');
   const { signout } = useContext(AuthContext);
 
-  const handleClick = (e, id) => {
+  const handleClick = (e) => {
     setActiveItem(e.currentTarget);
+  };
+
+  const handleChatId = (id) => {
     props.setActiveChatId(id);
+    console.log(props.activeChatId);
   };
 
   return (
@@ -48,9 +52,10 @@ const Sidebar = (props) => {
             <Link
               to="chats/global"
               className={`list-primary ${activeItem === 'global' ? 'accent-primary' : ''}`}
-              onClick={() =>
-                handleClick({ currentTarget: 'global' }, props.chats[0]._id)
-              }
+              onClick={() => {
+                handleClick({ currentTarget: 'global' });
+                handleChatId(props.chats[0]._id);
+              }}
             >
               Global Chat
             </Link>
@@ -61,23 +66,20 @@ const Sidebar = (props) => {
               activeItem={activeItem}
               chats={props.chats}
               handleClick={handleClick}
+              handleChatId={handleChatId}
             />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
             <FriendList
+              activeChatId={props.activeChatId}
               activeItem={activeItem}
-              friends={props.friends}
               handleClick={handleClick}
             />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
-            <MemberList
-              activeItem={activeItem}
-              allUsers={props.allUsers}
-              handleClick={handleClick}
-            />
+            <MemberList activeItem={activeItem} handleClick={handleClick} />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>

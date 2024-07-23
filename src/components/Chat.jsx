@@ -18,14 +18,14 @@ const Chat = () => {
   });
   const [draft, setDraft] = useState('');
   const [activeChatId, setActiveChatId, visibility] = useOutletContext();
-  const { apiUrl, userId } = useContext(AuthContext);
+  const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = 50;
     }
   }, [chatInfo.messages]);
 
@@ -58,7 +58,11 @@ const Chat = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const message = { message: draft, author: userId, date: new Date() };
+    const message = {
+      message: draft,
+      author: currentUser._id,
+      date: new Date(),
+    };
 
     try {
       const response = await fetch(`${apiUrl}/chats/${activeChatId}`, {
@@ -113,7 +117,7 @@ const Chat = () => {
                     {format(message.date, 'PP')}
                   </p>
                 )}
-                {message.author._id === userId ? (
+                {message.author._id === currentUser._id ? (
                   <MessageSent
                     body={message.body}
                     author={message.author}
