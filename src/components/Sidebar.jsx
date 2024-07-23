@@ -8,6 +8,8 @@ import { mdiChevronLeft } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 import FriendList from './FriendList';
 import MemberList from './MemberList';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const Sidebar = (props) => {
   const [activeItem, setActiveItem] = useState('global');
@@ -20,10 +22,10 @@ const Sidebar = (props) => {
 
   return (
     <div
-      className={`z-10 col-end-2 row-start-1 flex h-dvh flex-col justify-between bg-gray-100 transition duration-300 max-sm:col-start-1 max-sm:col-end-3 dark:bg-gray-900 ${!props.visibility && '-translate-x-full'} sticky top-0`}
+      className={`z-10 col-end-2 row-start-1 flex h-dvh min-w-0 flex-col justify-between bg-gray-100 transition duration-300 max-sm:col-start-1 max-sm:col-end-3 dark:bg-gray-900 ${!props.visibility && '-translate-x-full'} sticky top-0`}
     >
       <button
-        className={`accent-primary absolute right-4 top-4 z-50 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
+        className={`accent-primary absolute right-4 top-4 z-20 grid shrink-0 place-content-center rounded-full hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
         onClick={props.handleVisibility}
       >
         <Icon
@@ -32,7 +34,10 @@ const Sidebar = (props) => {
           className={`text-inherit transition duration-300 ${!props.visibility && 'rotate-180'}`}
         ></Icon>
       </button>
-      <div className="overflow-y-auto px-4 py-6">
+      <PerfectScrollbar
+        className="overflow-y-auto px-4 py-6"
+        style={{ maxHeight: '100%' }}
+      >
         <div className="mb-5 flex items-center justify-between pl-2">
           <h1 className="text-primary place-content-center text-3xl font-semibold">
             Chatterbox
@@ -97,7 +102,7 @@ const Sidebar = (props) => {
             </List>
           </li>
         </ul>
-      </div>
+      </PerfectScrollbar>
       <UserInfo />
     </div>
   );
