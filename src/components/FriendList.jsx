@@ -54,7 +54,7 @@ const FriendList = (props) => {
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(
-        `${apiUrl}/chats/${props.activeChatId}/members`,
+        `${apiUrl}/chats/${props.activeId}/members`,
         {
           method: 'PUT',
           headers: {
@@ -105,28 +105,23 @@ const FriendList = (props) => {
         return (
           <li
             key={friend._id}
-            className={`list-secondary group/friend flex items-center ${props.activeItem === friend.username && 'accent-primary'}`}
+            className={`list-secondary group/friend flex items-center ${props.activeId === friend._id && 'accent-primary'}`}
           >
             <Link
               to={`/users/${friend.username}`}
               id={friend._id}
               className="flex flex-grow items-center gap-4 p-3"
               state={{ userId: friend._id }}
-              onClick={() =>
-                props.handleClick(
-                  { currentTarget: friend.username },
-                  friend._id,
-                )
-              }
+              onClick={() => props.handleId(friend._id)}
             >
               <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                 <p>{friend.username[0].toUpperCase()}</p>
               </div>
               <p>{friend.username}</p>
             </Link>
-            {props.activeItem !== 'global' && (
+            {props.activeId !== 'global' && (
               <Label
-                buttonClass={`${props.activeItem === friend.username && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
+                buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
                 labelClass={'-translate-x-full'}
                 label="Add friend to active chat"
                 icon={mdiPlus}
@@ -134,7 +129,7 @@ const FriendList = (props) => {
               />
             )}
             <Label
-              buttonClass={`${props.activeItem === friend.username && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
+              buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
               labelClass={'-translate-x-full'}
               label="Remove friend"
               icon={mdiMinus}

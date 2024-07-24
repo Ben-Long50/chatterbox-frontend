@@ -84,19 +84,14 @@ const MemberList = (props) => {
         return (
           <li
             key={member._id}
-            className={`list-secondary group/user flex items-center ${props.activeItem === member.username && 'accent-primary'}`}
+            className={`list-secondary group/user flex items-center ${props.activeId === member._id && 'accent-primary'}`}
           >
             <Link
               to={`/users/${member.username}`}
               id={member._id}
               className="box-border flex flex-grow items-center gap-4 p-3"
               state={{ userId: member._id }}
-              onClick={() =>
-                props.handleClick(
-                  { currentTarget: member.username },
-                  member._id,
-                )
-              }
+              onClick={() => props.handleId(member._id)}
             >
               <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                 <p>{member.username[0].toUpperCase()}</p>
@@ -104,7 +99,7 @@ const MemberList = (props) => {
               <p>{member.username}</p>
             </Link>
             <Label
-              buttonClass={`${props.activeItem === member.username && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
+              buttonClass={`${props.activeId === member._id && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
               labelClass={'-translate-x-full'}
               label="Add friend"
               icon={mdiPlus}

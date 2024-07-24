@@ -4,6 +4,7 @@ import Form from './Form';
 import InputField from './InputField';
 import Button from './Button';
 import { AuthContext } from './AuthContext';
+import { jwtDecode } from 'jwt-decode';
 
 const SigninForm = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +12,7 @@ const SigninForm = () => {
     password: '',
   });
   const [errors, setErrors] = useState([]);
-  const { signin, apiUrl } = useContext(AuthContext);
+  const { signin, apiUrl, setCurrentUser } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,8 +37,10 @@ const SigninForm = () => {
       if (response.ok) {
         console.log('Response:', result.token);
         localStorage.setItem('token', result.token);
-        signin();
-        navigate('/chats/global');
+        const token = result.token;
+        const userToken = jwtDecode(token);
+        const user = userToken.user;
+        setCurrentUser(user);
       } else {
         const errorArray = result.map((error) => {
           return error.msg;
@@ -46,6 +49,9 @@ const SigninForm = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+    } finally {
+      signin();
+      navigate('/chats/global');
     }
   };
 

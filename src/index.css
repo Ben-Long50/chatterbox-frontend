@@ -34,3 +34,53 @@
     grid-template-columns: minmax(300px, 28rem) auto;
   }
 }
+
+@keyframes expand1 {
+  0% {
+    width: 10%;
+  }
+  50% {
+    width: 15%;
+    background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  }
+  100% {
+    width: 10%;
+  }
+}
+
+@keyframes expand2 {
+  0% {
+    width: 30%;
+  }
+  50% {
+    width: 35%;
+    background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  }
+  100% {
+    width: 30%;
+  }
+}
+@keyframes expand3 {
+  0% {
+    width: 20%;
+  }
+  50% {
+    width: 25%;
+    background-color: rgb(253 224 71 / var(--tw-bg-opacity));
+  }
+  100% {
+    width: 20%;
+  }
+}
+
+.animation-1 {
+  animation: expand1 4s infinite;
+}
+
+.animation-2 {
+  animation: expand2 5s infinite;
+}
+
+.animation-3 {
+  animation: expand3 6s infinite;
+}

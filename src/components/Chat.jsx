@@ -19,20 +19,25 @@ const Chat = () => {
     members: [],
   });
   const [draft, setDraft] = useState('');
-  const [activeChatId, setActiveChatId, visibility] = useOutletContext();
+  const [activeId, setActiveId, visibility] = useOutletContext();
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
-  const scrollRef = useRef(null);
   const socketRef = useRef(null);
+  const bottomRef = useRef(null);
 
   useEffect(() => {
-    console.log(activeChatId);
+    setTimeout(() => {
+      bottomRef.current?.scrollIntoView({ block: 'start' });
+    }, 1);
+  }, [loading, chatInfo]);
+
+  useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem('token');
     const fetchData = async () => {
       try {
-        const response = await fetch(`${apiUrl}/chats/${activeChatId}`, {
+        const response = await fetch(`${apiUrl}/chats/${activeId}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -40,7 +45,6 @@ const Chat = () => {
         });
         const data = await response.json();
         if (response.ok) {
-          console.log(data);
           setChatInfo(data);
         }
       } catch (error) {
@@ -56,7 +60,7 @@ const Chat = () => {
     });
     socketRef.current = socket;
 
-    socket.emit('joinChat', activeChatId);
+    socket.emit('joinChat', activeId);
 
     socket.on('newMessage', (message) => {
       setChatInfo((prevChatInfo) => ({
@@ -66,7 +70,6 @@ const Chat = () => {
     });
 
     socket.on('deletedMessage', (messageId) => {
-      console.log(messageId);
       setChatInfo((prevChatInfo) => ({
         ...prevChatInfo,
         messages: prevChatInfo.messages.filter((message) => {
@@ -78,10 +81,10 @@ const Chat = () => {
     });
 
     return () => {
-      socket.emit('leaveChat', activeChatId);
+      socket.emit('leaveChat', activeId);
       socket.disconnect();
     };
-  }, [activeChatId]);
+  }, [activeId]);
 
   const handleChange = (e) => {
     setDraft(e.target.value);
@@ -97,7 +100,7 @@ const Chat = () => {
     };
 
     try {
-      const response = await fetch(`${apiUrl}/chats/${activeChatId}`, {
+      const response = await fetch(`${apiUrl}/chats/${activeId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -125,7 +128,6 @@ const Chat = () => {
       options={{
         wheelSpeed: 1 / 2,
       }}
-      ref={scrollRef}
       className={`row-start-1 h-dvh w-full min-w-0 flex-col overflow-y-auto max-lg:col-start-1 max-lg:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
       <div className="flex min-h-dvh flex-col items-center justify-between">
@@ -163,7 +165,7 @@ const Chat = () => {
                     author={message.author}
                     date={message.date}
                     id={message._id}
-                    chatId={activeChatId}
+                    chatId={activeId}
                   />
                 ) : (
                   <MessageReceived
@@ -171,7 +173,7 @@ const Chat = () => {
                     author={message.author}
                     date={message.date}
                     id={message._id}
-                    chatId={activeChatId}
+                    chatId={activeId}
                   />
                 )}
               </>
@@ -205,6 +207,7 @@ const Chat = () => {
           </form>
         </div>
       </div>
+      <div ref={bottomRef}></div>
     </PerfectScrollbar>
   );
 };

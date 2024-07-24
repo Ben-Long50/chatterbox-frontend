@@ -45,6 +45,7 @@ const AuthProvider = ({ children }) => {
         signout,
         apiUrl,
         currentUser,
+        setCurrentUser,
       }}
     >
       {children}

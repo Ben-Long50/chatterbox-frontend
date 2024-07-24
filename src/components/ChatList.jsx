@@ -60,22 +60,19 @@ const ChatList = (props) => {
           return (
             <li
               key={chat.name}
-              className={`list-secondary group/chat flex items-center ${props.activeItem === chat.name && 'accent-primary'}`}
+              className={`list-secondary group/chat flex items-center ${props.activeId === chat._id && 'accent-primary'}`}
             >
               <Link
                 to={`/chats/${chat.name}`}
                 id={chat._id}
                 className="mr-auto box-border flex flex-grow items-center p-3"
-                onClick={() => {
-                  props.handleClick({ currentTarget: chat.name });
-                  props.handleChatId(chat._id);
-                }}
+                onClick={() => props.handleId(chat._id)}
               >
                 {chat.members.map((member, index) => {
                   return (
                     <div
                       key={index}
-                      className={`${index > 0 && '-ml-1.5'} text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl ring-2 transition duration-300 dark:bg-gray-700 ${props.activeItem === chat.name ? 'ring-yellow-200 group-hover/chat:ring-yellow-300' : 'ring-gray-100 group-hover/chat:ring-gray-200 dark:ring-gray-900 group-hover/chat:dark:ring-gray-800'}`}
+                      className={`${index > 0 && '-ml-1.5'} text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl ring-2 transition duration-300 dark:bg-gray-700 ${props.activeId === chat._id ? 'ring-yellow-200 group-hover/chat:ring-yellow-300' : 'ring-gray-100 group-hover/chat:ring-gray-200 dark:ring-gray-900 group-hover/chat:dark:ring-gray-800'}`}
                     >
                       <p>{member.username[0].toUpperCase()}</p>
                     </div>
@@ -83,15 +80,13 @@ const ChatList = (props) => {
                 })}
                 <p className="ml-2">{chat.name}</p>
               </Link>
-              {props.activeItem !== chat.name && (
+              {props.activeId !== chat._id && (
                 <Label
-                  buttonClass={`${props.activeItem === chat.name && 'group-hover/chat:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/chat:text-secondary`}
+                  buttonClass={`${props.activeId === chat._id && 'group-hover/chat:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/chat:text-secondary`}
                   labelClass={'-translate-x-full'}
                   label="Delete chat"
                   icon={mdiTrashCanOutline}
-                  onClick={() => {
-                    deleteChat(chat._id);
-                  }}
+                  onClick={() => deleteChat(chat._id)}
                 />
               )}
             </li>

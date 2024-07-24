@@ -2,7 +2,7 @@ import UserInfo from './UserInfo';
 import List from './List';
 import ChatList from './ChatList';
 import { Link } from 'react-router-dom';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronLeft } from '@mdi/js';
 import { AuthContext } from './AuthContext';
@@ -12,15 +12,10 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const Sidebar = (props) => {
-  const [activeItem, setActiveItem] = useState('');
   const { signout, currentUser } = useContext(AuthContext);
 
-  const handleClick = (e) => {
-    setActiveItem(e.currentTarget);
-  };
-
-  const handleChatId = (id) => {
-    props.setActiveChatId(id);
+  const handleId = (id) => {
+    props.setActiveId(id);
   };
 
   return (
@@ -53,11 +48,8 @@ const Sidebar = (props) => {
           <li>
             <Link
               to="chats/global"
-              className={`list-primary ${activeItem === 'global' ? 'accent-primary' : ''}`}
-              onClick={() => {
-                handleClick({ currentTarget: 'global' });
-                handleChatId(props.chats[0]._id);
-              }}
+              className={`list-primary ${props.activeId === props.chats[0]._id ? 'accent-primary' : ''}`}
+              onClick={() => handleId(props.chats[0]._id)}
             >
               Global Chat
             </Link>
@@ -65,32 +57,27 @@ const Sidebar = (props) => {
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
             <ChatList
-              activeItem={activeItem}
+              activeId={props.activeId}
               chats={props.chats}
-              handleClick={handleClick}
-              handleChatId={handleChatId}
+              handleId={handleId}
             />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
-            <FriendList
-              activeChatId={props.activeChatId}
-              activeItem={activeItem}
-              handleClick={handleClick}
-            />
+            <FriendList activeId={props.activeId} handleId={handleId} />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
-            <MemberList activeItem={activeItem} handleClick={handleClick} />
+            <MemberList activeId={props.activeId} handleId={handleId} />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
             <List heading="Account">
               <Link
-                className={`list-secondary flex-grow p-3 ${activeItem === 'details' && 'accent-primary'}`}
+                className={`list-secondary flex-grow p-3 ${props.activeId === currentUser._id && 'accent-primary'}`}
                 to={`/users/${currentUser.username}`}
                 state={{ userId: currentUser._id }}
-                onClick={() => handleClick({ currentTarget: 'details' })}
+                onClick={() => handleId(currentUser._id)}
               >
                 Details
               </Link>
@@ -103,7 +90,7 @@ const Sidebar = (props) => {
           </li>
         </ul>
       </PerfectScrollbar>
-      <UserInfo onClick={() => handleClick({ currentTarget: 'details' })} />
+      <UserInfo onClick={() => handleId(currentUser._id)} />
     </div>
   );
 };

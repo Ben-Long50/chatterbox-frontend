@@ -18,7 +18,7 @@ const ProfilePage = () => {
     username: '',
     bio: '',
   });
-  const [activeChatId, setActiveChatId, visibility] = useOutletContext();
+  const [activeId, setActiveId, visibility] = useOutletContext();
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const usernameInputRef = useRef(null);
@@ -48,6 +48,10 @@ const ProfilePage = () => {
 
   const handleEdit = () => {
     setEditMode(!editMode);
+  };
+
+  const handleId = (id) => {
+    setActiveId(id);
   };
 
   const handleChange = (event) => {
@@ -193,6 +197,9 @@ const ProfilePage = () => {
                     className="list-secondary flex items-center gap-4 py-1 text-inherit hover:bg-gray-200 dark:hover:bg-gray-800"
                     to={`/users/${friend.friend.username}`}
                     state={{ userId: friend.friend._id }}
+                    onClick={() => {
+                      handleId(friend.friend._id);
+                    }}
                   >
                     <ProfilePic
                       username={friend.friend.username}
@@ -219,6 +226,9 @@ const ProfilePage = () => {
                   className="list-secondary flex items-center gap-4 py-1 text-inherit hover:bg-gray-200 dark:hover:bg-gray-800"
                   to={`/users/${friend.username}`}
                   state={{ userId: friend._id }}
+                  onClick={() => {
+                    handleId(friend._id);
+                  }}
                 >
                   <ProfilePic
                     username={friend.username}
