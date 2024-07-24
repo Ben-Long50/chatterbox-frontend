@@ -140,7 +140,7 @@ const ProfilePage = () => {
       }}
       className={`row-start-1 mx-auto mb-auto h-dvh w-full min-w-0 max-xl:col-start-1 max-xl:col-end-3 md:gap-y-16 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
-      <div className="grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 md:pt-20 lg:px-8 lg:pb-8">
+      <div className="mx-auto grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 md:pt-20 lg:px-8 lg:pb-8">
         <div className="col-span-2 w-full items-center gap-12 justify-self-center md:flex-row">
           <div className="flex flex-col items-center justify-center gap-12 md:flex-row">
             <ProfilePic

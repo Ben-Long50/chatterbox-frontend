@@ -9,6 +9,7 @@ import MessageReceived from './MessageReceived';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import './../custom-scrollbar.css';
+import io from 'socket.io-client';
 
 const Chat = () => {
   const [loading, setLoading] = useState(true);
@@ -23,8 +24,10 @@ const Chat = () => {
 
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
+    console.log(activeChatId);
     setLoading(true);
     const token = localStorage.getItem('token');
     const fetchData = async () => {
@@ -37,6 +40,7 @@ const Chat = () => {
         });
         const data = await response.json();
         if (response.ok) {
+          console.log(data);
           setChatInfo(data);
         }
       } catch (error) {
@@ -46,6 +50,37 @@ const Chat = () => {
       }
     };
     fetchData();
+
+    const socket = io(apiUrl, {
+      query: { token },
+    });
+    socketRef.current = socket;
+
+    socket.emit('joinChat', activeChatId);
+
+    socket.on('newMessage', (message) => {
+      setChatInfo((prevChatInfo) => ({
+        ...prevChatInfo,
+        messages: [...prevChatInfo.messages, message],
+      }));
+    });
+
+    socket.on('deletedMessage', (messageId) => {
+      console.log(messageId);
+      setChatInfo((prevChatInfo) => ({
+        ...prevChatInfo,
+        messages: prevChatInfo.messages.filter((message) => {
+          if (message._id !== messageId.messageId) {
+            return message;
+          }
+        }),
+      }));
+    });
+
+    return () => {
+      socket.emit('leaveChat', activeChatId);
+      socket.disconnect();
+    };
   }, [activeChatId]);
 
   const handleChange = (e) => {
@@ -73,6 +108,7 @@ const Chat = () => {
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
+        setDraft('');
         inputRef.current.value = '';
       }
     } catch (error) {
