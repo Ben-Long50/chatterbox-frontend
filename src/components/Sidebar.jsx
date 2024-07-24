@@ -21,7 +21,6 @@ const Sidebar = (props) => {
 
   const handleChatId = (id) => {
     props.setActiveChatId(id);
-    console.log(props.activeChatId);
   };
 
   return (
@@ -39,6 +38,9 @@ const Sidebar = (props) => {
         ></Icon>
       </button>
       <PerfectScrollbar
+        options={{
+          wheelSpeed: 1 / 2,
+        }}
         className="overflow-y-auto px-4 py-6"
         style={{ maxHeight: '100%' }}
       >

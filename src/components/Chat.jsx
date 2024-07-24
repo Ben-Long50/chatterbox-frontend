@@ -11,6 +11,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import './../custom-scrollbar.css';
 
 const Chat = () => {
+  const [loading, setLoading] = useState(true);
   const [chatInfo, setChatInfo] = useState({
     name: '',
     messages: [],
@@ -24,12 +25,7 @@ const Chat = () => {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = 50;
-    }
-  }, [chatInfo.messages]);
-
-  useEffect(() => {
+    setLoading(true);
     const token = localStorage.getItem('token');
     const fetchData = async () => {
       try {
@@ -45,9 +41,10 @@ const Chat = () => {
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchData();
   }, [activeChatId]);
 
@@ -83,8 +80,15 @@ const Chat = () => {
     }
   };
 
+  if (loading) {
+    return <div className="text-primary">Loading...</div>;
+  }
+
   return (
     <PerfectScrollbar
+      options={{
+        wheelSpeed: 1 / 2,
+      }}
       ref={scrollRef}
       className={`row-start-1 h-dvh w-full min-w-0 flex-col overflow-y-auto max-lg:col-start-1 max-lg:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
