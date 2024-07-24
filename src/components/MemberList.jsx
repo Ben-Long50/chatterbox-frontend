@@ -27,7 +27,6 @@ const MemberList = (props) => {
         );
         const data = await response.json();
         if (response.ok) {
-          console.log(data);
           setMembers(data);
           setFilteredMembers(data);
         }
@@ -91,7 +90,7 @@ const MemberList = (props) => {
               to={`/users/${member.username}`}
               id={member._id}
               className="box-border flex flex-grow items-center gap-4 p-3"
-              state={{ member }}
+              state={{ userId: member._id }}
               onClick={() =>
                 props.handleClick(
                   { currentTarget: member.username },

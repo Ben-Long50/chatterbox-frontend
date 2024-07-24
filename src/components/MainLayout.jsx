@@ -11,41 +11,30 @@ const MainLayout = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const fetchData = async () => {
+    const fetchChats = async () => {
       try {
-        const [chatsData] = await Promise.all([
-          fetchChats(token, currentUser._id),
-        ]);
-
-        if (chatsData.length > 0) {
-          setChats(chatsData);
-          setActiveChatId(chatsData[0]._id);
+        const response = await fetch(
+          `${apiUrl}/users/${currentUser._id}/chats`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setChats(data);
         }
       } catch (error) {
         console.error(error);
       }
     };
-
-    fetchData();
+    fetchChats();
   }, [currentUser._id]);
 
   const handleVisibility = () => {
     setVisibility((prevVisibility) => !prevVisibility);
-  };
-
-  const fetchChats = async (token, userId) => {
-    try {
-      const response = await fetch(`${apiUrl}/users/${userId}/chats`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (

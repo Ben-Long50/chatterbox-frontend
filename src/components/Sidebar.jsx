@@ -12,8 +12,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const Sidebar = (props) => {
-  const [activeItem, setActiveItem] = useState('global');
-  const { signout } = useContext(AuthContext);
+  const [activeItem, setActiveItem] = useState('');
+  const { signout, currentUser } = useContext(AuthContext);
 
   const handleClick = (e) => {
     setActiveItem(e.currentTarget);
@@ -86,15 +86,11 @@ const Sidebar = (props) => {
             <List heading="Account">
               <Link
                 className={`list-secondary flex-grow p-3 ${activeItem === 'details' && 'accent-primary'}`}
+                to={`/users/${currentUser.username}`}
+                state={{ userId: currentUser._id }}
                 onClick={() => handleClick({ currentTarget: 'details' })}
               >
                 Details
-              </Link>
-              <Link
-                className={`list-secondary flex-grow p-3 ${activeItem === 'security' && 'accent-primary'}`}
-                onClick={() => handleClick({ currentTarget: 'security' })}
-              >
-                Security
               </Link>
               <form action="/signin" onSubmit={signout}>
                 <button className="list-secondary flex-grow p-3" type="submit">
@@ -105,7 +101,7 @@ const Sidebar = (props) => {
           </li>
         </ul>
       </PerfectScrollbar>
-      <UserInfo />
+      <UserInfo onClick={() => handleClick({ currentTarget: 'details' })} />
     </div>
   );
 };

@@ -111,7 +111,7 @@ const FriendList = (props) => {
               to={`/users/${friend.username}`}
               id={friend._id}
               className="flex flex-grow items-center gap-4 p-3"
-              state={{ member: friend }}
+              state={{ userId: friend._id }}
               onClick={() =>
                 props.handleClick(
                   { currentTarget: friend.username },
