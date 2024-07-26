@@ -31,16 +31,23 @@ const MainLayout = () => {
         const data = await response.json();
         if (response.ok) {
           setChats(data);
-          setActiveId(data[0]._id);
+          if (!localStorage.getItem('activeId')) {
+            localStorage.setItem('activeId', data[0]._id);
+            setActiveId(data[0]._id);
+          } else {
+            setActiveId(localStorage.getItem('activeId'));
+          }
         }
-        setLoading(false);
       } catch (error) {
         console.error(error);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
     fetchChats();
+    // return () => {
+    //   localStorage.removeItem('activeId');
+    // };
   }, [currentUser._id]);
 
   const handleVisibility = () => {
