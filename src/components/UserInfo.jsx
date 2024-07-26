@@ -9,7 +9,10 @@ const UserInfo = (props) => {
       className="transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800"
       to={`/users/${currentUser.username}`}
       state={{ userId: currentUser._id }}
-      onClick={props.onClick}
+      onClick={() => {
+        props.handleId(currentUser._id);
+        props.hideSidebar();
+      }}
     >
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-400 bg-inherit dark:border-gray-500">
         <div className="flex items-center justify-between gap-2 p-4">

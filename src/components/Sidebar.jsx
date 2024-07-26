@@ -2,7 +2,7 @@ import UserInfo from './UserInfo';
 import List from './List';
 import ChatList from './ChatList';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import { AuthContext } from './AuthContext';
@@ -12,7 +12,34 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const Sidebar = (props) => {
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
   const { signout, currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const hideSidebar = () => {
+    if (windowSize.width < 1024) {
+      props.setVisibility(false);
+    }
+  };
 
   const handleId = (id) => {
     props.setActiveId(id);
@@ -49,7 +76,10 @@ const Sidebar = (props) => {
             <Link
               to="chats/global"
               className={`list-primary ${props.activeId === props.chats[0]._id ? 'accent-primary' : ''}`}
-              onClick={() => handleId(props.chats[0]._id)}
+              onClick={() => {
+                handleId(props.chats[0]._id);
+                hideSidebar();
+              }}
             >
               Global Chat
             </Link>
@@ -60,11 +90,16 @@ const Sidebar = (props) => {
               activeId={props.activeId}
               chats={props.chats}
               handleId={handleId}
+              hideSidebar={hideSidebar}
             />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
-            <FriendList activeId={props.activeId} handleId={handleId} />
+            <FriendList
+              activeId={props.activeId}
+              handleId={handleId}
+              hideSidebar={hideSidebar}
+            />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
@@ -77,7 +112,10 @@ const Sidebar = (props) => {
                 className={`list-secondary flex-grow p-3 ${props.activeId === currentUser._id && 'accent-primary'}`}
                 to={`/users/${currentUser.username}`}
                 state={{ userId: currentUser._id }}
-                onClick={() => handleId(currentUser._id)}
+                onClick={() => {
+                  handleId();
+                  hideSidebar();
+                }}
               >
                 Details
               </Link>
@@ -102,7 +140,7 @@ const Sidebar = (props) => {
           </li>
         </ul>
       </PerfectScrollbar>
-      <UserInfo onClick={() => handleId(currentUser._id)} />
+      <UserInfo handleId={handleId} hideSidebar={hideSidebar} />
     </div>
   );
 };

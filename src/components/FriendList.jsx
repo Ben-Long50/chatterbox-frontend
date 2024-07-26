@@ -112,7 +112,10 @@ const FriendList = (props) => {
               id={friend._id}
               className="flex flex-grow items-center gap-4 p-3"
               state={{ userId: friend._id }}
-              onClick={() => props.handleId(friend._id)}
+              onClick={() => {
+                props.handleId(friend._id);
+                props.hideSidebar();
+              }}
             >
               <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                 <p>{friend.username[0].toUpperCase()}</p>

@@ -66,7 +66,10 @@ const ChatList = (props) => {
                 to={`/chats/${chat.name}`}
                 id={chat._id}
                 className="mr-auto box-border flex flex-grow items-center p-3"
-                onClick={() => props.handleId(chat._id)}
+                onClick={() => {
+                  props.handleId(chat._id);
+                  props.hideSidebar();
+                }}
               >
                 {chat.members.map((member, index) => {
                   return (
