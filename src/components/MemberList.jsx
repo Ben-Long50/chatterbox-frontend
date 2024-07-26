@@ -4,6 +4,7 @@ import Label from './Label';
 import { mdiPlus } from '@mdi/js';
 import { useContext, useState, useRef, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
+import { io } from 'socket.io-client';
 
 const MemberList = (props) => {
   const [members, setMembers] = useState([]);
@@ -11,6 +12,7 @@ const MemberList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,6 +37,46 @@ const MemberList = (props) => {
       }
     };
     fetchUsers();
+
+    const socket = io(apiUrl, {
+      query: { token },
+    });
+
+    socketRef.current = socket;
+
+    socket.on('removeMember', (newFriend) => {
+      setMembers((prevMembers) => {
+        const newMembers = prevMembers.filter((member) => {
+          if (member._id !== newFriend._id) {
+            return member;
+          }
+        });
+        return newMembers;
+      });
+      setFilteredMembers((prevFiltered) => {
+        const newFiltered = prevFiltered.filter((member) => {
+          if (member._id !== newFriend._id) {
+            return member;
+          }
+        });
+        return newFiltered;
+      });
+    });
+
+    socket.on('addMember', (oldFriend) => {
+      setMembers((prevMembers) => {
+        const newMembers = [...prevMembers, oldFriend];
+        return newMembers;
+      });
+      setFilteredMembers((prevFiltered) => {
+        const newFiltered = [...prevFiltered, oldFriend];
+        return newFiltered;
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [currentUser._id]);
 
   const handleChange = () => {
