@@ -4,6 +4,7 @@ import Label from './Label';
 import { mdiPlus, mdiMinus } from '@mdi/js';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
+import { io } from 'socket.io-client';
 
 const FriendList = (props) => {
   const [friends, setFriends] = useState([]);
@@ -11,6 +12,7 @@ const FriendList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,6 +37,46 @@ const FriendList = (props) => {
       }
     };
     fetchFriends();
+
+    const socket = io(apiUrl, {
+      query: { token },
+    });
+
+    socketRef.current = socket;
+
+    socket.on('addFriend', ({ newFriend, user }) => {
+      if (user._id === currentUser._id) {
+        setFriends((prevFriends) => [...prevFriends, newFriend]);
+        setFilteredFriends((prevFiltered) => [...prevFiltered, newFriend]);
+      }
+      if (newFriend._id === currentUser._id) {
+        setFriends((prevFriends) => [...prevFriends, user]);
+        setFilteredFriends((prevFiltered) => [...prevFiltered, user]);
+      }
+    });
+
+    socket.on('removeFriend', ({ oldFriend, user }) => {
+      if (user._id === currentUser._id) {
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend._id !== oldFriend._id),
+        );
+        setFilteredFriends((prevFiltered) =>
+          prevFiltered.filter((friend) => friend._id !== oldFriend._id),
+        );
+      }
+      if (oldFriend._id === currentUser._id) {
+        setFriends((prevFriends) =>
+          prevFriends.filter((friend) => friend._id !== user._id),
+        );
+        setFilteredFriends((prevFiltered) =>
+          prevFiltered.filter((friend) => friend._id !== user._id),
+        );
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [currentUser._id]);
 
   const handleChange = () => {

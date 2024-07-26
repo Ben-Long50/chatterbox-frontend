@@ -4,6 +4,7 @@ import Label from './Label';
 import { mdiPlus } from '@mdi/js';
 import { useContext, useState, useRef, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
+import { io } from 'socket.io-client';
 
 const MemberList = (props) => {
   const [members, setMembers] = useState([]);
@@ -11,6 +12,7 @@ const MemberList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,6 +37,46 @@ const MemberList = (props) => {
       }
     };
     fetchUsers();
+
+    const socket = io(apiUrl, {
+      query: { token },
+    });
+
+    socketRef.current = socket;
+
+    socket.on('removeMember', ({ newFriend, user }) => {
+      if (user._id === currentUser._id) {
+        setMembers((prevMembers) =>
+          prevMembers.filter((member) => member._id !== newFriend._id),
+        );
+        setFilteredMembers((prevFiltered) =>
+          prevFiltered.filter((member) => member._id !== newFriend._id),
+        );
+      }
+      if (newFriend._id === currentUser._id) {
+        setMembers((prevMembers) =>
+          prevMembers.filter((member) => member._id !== user._id),
+        );
+        setFilteredMembers((prevFiltered) =>
+          prevFiltered.filter((member) => member._id !== user._id),
+        );
+      }
+    });
+
+    socket.on('addMember', ({ oldFriend, user }) => {
+      if (user._id === currentUser._id) {
+        setMembers((prevMembers) => [...prevMembers, oldFriend]);
+        setFilteredMembers((prevFiltered) => [...prevFiltered, oldFriend]);
+      }
+      if (oldFriend._id === currentUser._id) {
+        setMembers((prevFriends) => [...prevFriends, user]);
+        setFilteredMembers((prevFiltered) => [...prevFiltered, user]);
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [currentUser._id]);
 
   const handleChange = () => {
@@ -91,7 +133,10 @@ const MemberList = (props) => {
               id={member._id}
               className="box-border flex flex-grow items-center gap-4 p-3"
               state={{ userId: member._id }}
-              onClick={() => props.handleId(member._id)}
+              onClick={() => {
+                props.handleId(member._id);
+                props.hideSidebar();
+              }}
             >
               <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                 <p>{member.username[0].toUpperCase()}</p>

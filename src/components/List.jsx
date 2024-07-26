@@ -1,9 +1,29 @@
 import Icon from '@mdi/react';
 import { mdiChevronDown } from '@mdi/js';
+import { useEffect, useState } from 'react';
 
 const List = (props) => {
+  const [display, setDisplay] = useState(
+    JSON.parse(localStorage.getItem(`${props.heading}`)) || false,
+  );
+
+  useEffect(() => {
+    localStorage.setItem(`${props.heading}`, JSON.stringify(display));
+  }, [display, props.heading]);
+
+  const toggleMenu = (e) => {
+    if (e.target.tagName.toLowerCase() === 'summary') {
+      e.preventDefault();
+      setDisplay((prevDisplay) => !prevDisplay);
+    }
+  };
+
   return (
-    <details className="group [&_summary::-webkit-details-marker]:hidden">
+    <details
+      className="group [&_summary::-webkit-details-marker]:hidden"
+      open={display}
+      onClick={toggleMenu}
+    >
       <summary className="list-primary flex items-center justify-between">
         <span className="text-base font-medium"> {props.heading} </span>
         <span className="shrink-0 transition duration-300 group-open:-rotate-180">
