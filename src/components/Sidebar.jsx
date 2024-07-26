@@ -104,7 +104,11 @@ const Sidebar = (props) => {
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>
-            <MemberList activeId={props.activeId} handleId={handleId} />
+            <MemberList
+              activeId={props.activeId}
+              handleId={handleId}
+              hideSidebar={hideSidebar}
+            />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
           <li>

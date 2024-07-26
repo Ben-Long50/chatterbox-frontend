@@ -91,7 +91,10 @@ const MemberList = (props) => {
               id={member._id}
               className="box-border flex flex-grow items-center gap-4 p-3"
               state={{ userId: member._id }}
-              onClick={() => props.handleId(member._id)}
+              onClick={() => {
+                props.handleId(member._id);
+                props.hideSidebar();
+              }}
             >
               <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
                 <p>{member.username[0].toUpperCase()}</p>
