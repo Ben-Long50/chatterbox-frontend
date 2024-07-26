@@ -46,6 +46,7 @@ const AuthProvider = ({ children }) => {
     setCurrentUser(user);
     setIsAuthenticated(true);
     setTimeout(() => {
+      localStorage.removeItem('activeId');
       localStorage.removeItem('token');
       setIsAuthenticated(false);
     }, authTimer);
@@ -53,6 +54,7 @@ const AuthProvider = ({ children }) => {
 
   const signout = () => {
     setIsAuthenticated(false);
+    localStorage.removeItem('activeId');
     localStorage.removeItem('token');
   };
 

@@ -43,6 +43,7 @@ const Sidebar = (props) => {
 
   const handleId = (id) => {
     props.setActiveId(id);
+    localStorage.setItem('activeId', id);
   };
 
   return (
@@ -113,7 +114,7 @@ const Sidebar = (props) => {
                 to={`/users/${currentUser.username}`}
                 state={{ userId: currentUser._id }}
                 onClick={() => {
-                  handleId();
+                  handleId(currentUser._id);
                   hideSidebar();
                 }}
               >
