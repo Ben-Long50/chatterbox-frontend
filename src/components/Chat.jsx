@@ -10,6 +10,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import './../custom-scrollbar.css';
 import io from 'socket.io-client';
+import Loading from './Loading';
 
 const Chat = () => {
   const [loading, setLoading] = useState(true);
@@ -110,7 +111,6 @@ const Chat = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        console.log(result.message);
         setDraft('');
         inputRef.current.value = '';
       }
@@ -120,7 +120,7 @@ const Chat = () => {
   };
 
   if (loading) {
-    return <div className="text-primary">Loading...</div>;
+    return <Loading />;
   }
 
   return (

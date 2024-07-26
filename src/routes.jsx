@@ -15,12 +15,12 @@ import ProfilePage from './components/ProfilePage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />} errorElement={<ErrorPage />}>
-      <Route element={<AuthLayout />}>
+    <Route path="/" element={<App />}>
+      <Route element={<AuthLayout />} errorElement={<ErrorPage />}>
         <Route path="signup" element={<SignupForm />} />
         <Route index path="signin" element={<SigninForm />} />
       </Route>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
         <Route index element={<Navigate to="chats/global" replace />} />
         <Route path="chats/:chatName" element={<Chat />} />
         <Route path="users/:username" element={<ProfilePage />} />

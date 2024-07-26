@@ -6,7 +6,7 @@ const UserInfo = (props) => {
   const { currentUser } = useContext(AuthContext);
   return (
     <Link
-      className="transition duration-300 hover:bg-gray-800"
+      className="transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800"
       to={`/users/${currentUser.username}`}
       state={{ userId: currentUser._id }}
       onClick={props.onClick}

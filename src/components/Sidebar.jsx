@@ -4,7 +4,7 @@ import ChatList from './ChatList';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import Icon from '@mdi/react';
-import { mdiChevronLeft } from '@mdi/js';
+import { mdiChevronLeft, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 import FriendList from './FriendList';
 import MemberList from './MemberList';
@@ -81,6 +81,18 @@ const Sidebar = (props) => {
               >
                 Details
               </Link>
+              <button
+                className="list-secondary flex items-center gap-4 p-3"
+                onClick={props.changeTheme}
+              >
+                <p>Change theme</p>
+                <Icon
+                  path={
+                    props.theme === 'dark' ? mdiWeatherSunny : mdiWeatherNight
+                  }
+                  size={1.2}
+                />
+              </button>
               <form action="/signin" onSubmit={signout}>
                 <button className="list-secondary flex-grow p-3" type="submit">
                   Sign out

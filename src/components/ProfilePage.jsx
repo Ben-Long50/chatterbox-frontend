@@ -1,4 +1,9 @@
-import { useOutletContext, Link, useLocation } from 'react-router-dom';
+import {
+  useOutletContext,
+  Link,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import ProfilePic from './ProfilePic';
 import InfoBox from './InfoBox';
 import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -6,6 +11,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import './../custom-scrollbar.css';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
+import Loading from './Loading';
 
 const ProfilePage = () => {
   const location = useLocation();
@@ -14,12 +20,14 @@ const ProfilePage = () => {
   const [bestFriends, setBestFriends] = useState([]);
   const [userInfo, setUserInfo] = useState({});
   const [editMode, setEditMode] = useState(false);
+  const [deleteMode, setDeleteMode] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     bio: '',
   });
   const [activeId, setActiveId, visibility] = useOutletContext();
-  const { apiUrl, currentUser } = useContext(AuthContext);
+  const { apiUrl, currentUser, signout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const usernameInputRef = useRef(null);
   const bioInputRef = useRef(null);
@@ -45,10 +53,6 @@ const ProfilePage = () => {
     };
     fetchData();
   }, [userId]);
-
-  const handleEdit = () => {
-    setEditMode(!editMode);
-  };
 
   const handleId = (id) => {
     setActiveId(id);
@@ -133,8 +137,30 @@ const ProfilePage = () => {
     }
   };
 
+  const deleteProfile = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(`${apiUrl}/users/${currentUser._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        console.log(data.message);
+        signout();
+        navigate('/signin');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (loading) {
-    return <div className="text-primary">Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -168,7 +194,7 @@ const ProfilePage = () => {
             )}
           </div>
           {!editMode ? (
-            <p className="text-secondary mx-6 mb-4 mt-12 text-center text-2xl md:mx-10">
+            <p className="text-secondary mx-6 mb-4 mt-12 text-left text-2xl md:mx-10">
               {userInfo.profile?.bio || ''}
             </p>
           ) : (
@@ -188,28 +214,28 @@ const ProfilePage = () => {
           className="col-span-2 mb-auto md:col-span-1"
           heading="Best Friends"
         >
-          {bestFriends.map((friend, index) => {
+          {bestFriends?.map((friend, index) => {
             if (index < 5) {
               return (
                 <>
                   <span>{`${index + 1}.`}</span>
                   <Link
                     className="list-secondary flex items-center gap-4 py-1 text-inherit hover:bg-gray-200 dark:hover:bg-gray-800"
-                    to={`/users/${friend.friend.username}`}
-                    state={{ userId: friend.friend._id }}
+                    to={`/users/${friend.friendName}`}
+                    state={{ userId: friend.friendId }}
                     onClick={() => {
-                      handleId(friend.friend._id);
+                      handleId(friend.friendId);
                     }}
                   >
                     <ProfilePic
-                      username={friend.friend.username}
+                      username={friend.friendName}
                       className="my-0 ml-1 size-10 dark:bg-gray-700"
                     />
                     <p className="mr-auto text-lg" key={index}>
-                      {friend.friend.username}
+                      {friend.friendName}
                     </p>
                     <span className="text-secondary ml-4 flex size-7 shrink-0 items-center justify-center rounded-full bg-gray-300 dark:bg-gray-700">
-                      {friend.totalMessages}
+                      {friend.count}
                     </span>
                   </Link>
                 </>
@@ -257,35 +283,60 @@ const ProfilePage = () => {
           </div>
         </InfoBox>
         {currentUser._id === userInfo._id && (
-          <div className="col-span-2 flex justify-between">
-            {!editMode ? (
+          <div
+            className={`col-span-2 flex gap-8 ${!deleteMode && !editMode && 'justify-between'} ${deleteMode && 'justify-end'} ${editMode && 'justify-start'}`}
+          >
+            {!editMode && !deleteMode && (
               <>
                 <button
                   className="accent-primary rounded p-2 hover:scale-105"
-                  onClick={handleEdit}
+                  onClick={() => setEditMode(!editMode)}
                 >
                   Edit account
                 </button>
-                <button className="accent-primary rounded p-2 hover:scale-105 hover:bg-red-500">
+                <button
+                  className="accent-primary rounded p-2 hover:scale-105 hover:bg-red-500"
+                  onClick={() => setDeleteMode(!deleteMode)}
+                >
                   Delete account
                 </button>
               </>
-            ) : (
+            )}
+            {editMode && (
               <>
                 <button
                   className="accent-primary rounded p-2 hover:scale-105"
                   onClick={() => {
-                    handleEdit();
+                    setEditMode(!editMode);
                     updateProfile();
                   }}
                 >
                   Submit changes
                 </button>
                 <button
-                  className="accent-primary rounded p-2 hover:scale-105 hover:bg-red-500"
-                  onClick={handleEdit}
+                  className="accent-primary rounded p-2 hover:scale-105"
+                  onClick={() => setEditMode(!editMode)}
                 >
                   Cancel changes
+                </button>
+              </>
+            )}
+            {deleteMode && (
+              <>
+                <button
+                  className="accent-primary rounded p-2 hover:scale-105 hover:bg-red-500"
+                  onClick={() => {
+                    setDeleteMode(!deleteMode);
+                    deleteProfile();
+                  }}
+                >
+                  Confirm Delete
+                </button>
+                <button
+                  className="accent-primary rounded p-2 hover:scale-105"
+                  onClick={() => setDeleteMode(!deleteMode)}
+                >
+                  Cancel delete
                 </button>
               </>
             )}

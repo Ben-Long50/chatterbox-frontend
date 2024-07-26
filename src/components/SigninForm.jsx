@@ -12,7 +12,7 @@ const SigninForm = () => {
     password: '',
   });
   const [errors, setErrors] = useState([]);
-  const { signin, apiUrl, setCurrentUser } = useContext(AuthContext);
+  const { signin, apiUrl } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -35,12 +35,10 @@ const SigninForm = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        console.log('Response:', result.token);
-        localStorage.setItem('token', result.token);
-        const token = result.token;
-        const userToken = jwtDecode(token);
-        const user = userToken.user;
-        setCurrentUser(user);
+        console.log(result.token);
+        await localStorage.setItem('token', result.token);
+        signin();
+        navigate('/chats/global');
       } else {
         const errorArray = result.map((error) => {
           return error.msg;
@@ -49,9 +47,6 @@ const SigninForm = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-    } finally {
-      signin();
-      navigate('/chats/global');
     }
   };
 
