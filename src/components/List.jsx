@@ -12,9 +12,10 @@ const List = (props) => {
   }, [display, props.heading]);
 
   const toggleMenu = (e) => {
-    e.preventDefault();
-    console.log('toggle');
-    setDisplay((prevDisplay) => !prevDisplay);
+    if (e.target.tagName.toLowerCase() === 'summary') {
+      e.preventDefault();
+      setDisplay((prevDisplay) => !prevDisplay);
+    }
   };
 
   return (
