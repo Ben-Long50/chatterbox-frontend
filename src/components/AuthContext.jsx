@@ -40,6 +40,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const signin = () => {
+    localStorage.removeItem('activeId');
     const token = localStorage.getItem('token');
     const userToken = jwtDecode(token);
     const user = userToken.user;
