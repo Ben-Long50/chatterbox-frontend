@@ -38,8 +38,7 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  // const authTimer = 1000 * 60 * 60 * 4;
-  const authTimer = 10000;
+  const authTimer = 1000 * 60 * 60 * 4;
 
   const signin = () => {
     localStorage.removeItem('activeId');
