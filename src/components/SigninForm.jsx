@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Form from './Form';
 import InputField from './InputField';
 import Button from './Button';
@@ -13,6 +13,13 @@ const SigninForm = () => {
   const [errors, setErrors] = useState([]);
   const { signin, apiUrl } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/chats/global');
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
