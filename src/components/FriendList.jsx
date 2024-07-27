@@ -188,15 +188,21 @@ const FriendList = (props) => {
                 labelClass={'-translate-x-full'}
                 label="Add friend to active chat"
                 icon={mdiPlus}
-                onClick={() => addFriendToChat(friend._id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addFriendToChat(friend._id);
+                }}
               />
             )}
             <Label
               buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
               labelClass={'-translate-x-full'}
-              label="Remove friend"
+              label="Remove as friend"
               icon={mdiMinus}
-              onClick={() => removeFriend(friend._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFriend(friend._id);
+              }}
             />
           </li>
         );

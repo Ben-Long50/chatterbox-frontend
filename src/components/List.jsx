@@ -22,9 +22,11 @@ const List = (props) => {
     <details
       className="group [&_summary::-webkit-details-marker]:hidden"
       open={display}
-      onClick={toggleMenu}
     >
-      <summary className="list-primary flex items-center justify-between">
+      <summary
+        className="list-primary flex items-center justify-between"
+        onClick={toggleMenu}
+      >
         <span className="text-base font-medium"> {props.heading} </span>
         <span className="shrink-0 transition duration-300 group-open:-rotate-180">
           <Icon

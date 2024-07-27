@@ -34,7 +34,7 @@ const SigninForm = () => {
       });
       const result = await response.json();
       if (response.ok) {
-        await localStorage.setItem('token', result.token);
+        localStorage.setItem('token', result.token);
         signin();
         navigate('/chats/global');
       } else {

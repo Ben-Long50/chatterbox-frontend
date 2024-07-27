@@ -148,7 +148,10 @@ const MemberList = (props) => {
               labelClass={'-translate-x-full'}
               label="Add friend"
               icon={mdiPlus}
-              onClick={() => addUserAsFriend(member._id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                addUserAsFriend(member._id);
+              }}
             />
           </li>
         );

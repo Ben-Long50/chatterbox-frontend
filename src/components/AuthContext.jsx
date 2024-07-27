@@ -10,47 +10,53 @@ const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     return token ? true : false;
   });
-  const [currentUser, setCurrentUser] = useState(() => {
-    if (localStorage.getItem('user')) {
-      return localStorage.getItem('user');
-    } else {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const userToken = jwtDecode(token);
-        const user = userToken.user;
-        localStorage.setItem('user', user);
-        setCurrentUser(user);
-      }
-    }
-  });
+  const [currentUser, setCurrentUser] = useState({});
 
   const apiUrl = 'https://chatterbox-messenger.adaptable.app';
-
-  const authTimer = 1000 * 60 * 60 * 4;
 
   useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem('token');
-    if (token) {
-      const userToken = jwtDecode(token);
-      const user = userToken.user;
-      setCurrentUser(user);
+    const expirationTime = localStorage.getItem('tokenExpirationTime');
+    if (token && expirationTime) {
+      if (Date.now() > expirationTime) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('tokenExpirationTime');
+        setIsAuthenticated(false);
+        setCurrentUser(null);
+      } else {
+        try {
+          const userToken = jwtDecode(token);
+          const user = userToken.user;
+          setCurrentUser(user);
+          setIsAuthenticated(true);
+        } catch (error) {
+          console.error('Invalid token:', error);
+        }
+      }
     }
     setLoading(false);
   }, []);
 
+  // const authTimer = 1000 * 60 * 60 * 4;
+  const authTimer = 10000;
+
   const signin = () => {
     localStorage.removeItem('activeId');
     const token = localStorage.getItem('token');
-    const userToken = jwtDecode(token);
-    const user = userToken.user;
-    setCurrentUser(user);
-    setIsAuthenticated(true);
-    setTimeout(() => {
-      localStorage.removeItem('activeId');
-      localStorage.removeItem('token');
-      setIsAuthenticated(false);
-    }, authTimer);
+    if (token) {
+      try {
+        const userToken = jwtDecode(token);
+        const user = userToken.user;
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+
+        const expirationTime = Date.now() + authTimer;
+        localStorage.setItem('tokenExpirationTime', expirationTime);
+      } catch (error) {
+        console.error('Invalid token during signin:', error);
+      }
+    }
   };
 
   const signout = () => {

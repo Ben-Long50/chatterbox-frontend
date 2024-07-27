@@ -15,8 +15,8 @@ const UserInfo = (props) => {
       }}
     >
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-400 bg-inherit dark:border-gray-500">
-        <div className="flex items-center justify-between gap-2 p-4">
-          <div className="text-primary flex size-14 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-4xl dark:bg-gray-700">
+        <div className="flex items-center justify-between gap-2 p-3 pr-6">
+          <div className="text-primary flex size-12 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-3xl dark:bg-gray-700">
             <p>
               {currentUser.username
                 ? currentUser.username[0].toUpperCase()

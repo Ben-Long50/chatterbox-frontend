@@ -39,24 +39,25 @@ const ChatList = (props) => {
 
     socket.on('removeFromChat', ({ chat, user }) => {
       const memberIds = chat.members;
+
       if (user._id === currentUser._id) {
         props.setChats((prevChats) =>
           prevChats.filter((item) => item._id !== chat._id),
         );
       } else if (memberIds.includes(currentUser._id)) {
-        const targetChat = props.chats.filter(
-          (item) => item._id === chat._id,
-        )[0];
-        targetChat.members = targetChat.members.filter(
-          (member) => member._id !== user._id,
-        );
-        const newChatList = props.chats.map((item) => {
-          if (item._id === targetChat._id) {
-            return targetChat;
-          }
-          return item;
+        props.setChats((prevChats) => {
+          return prevChats.map((item) => {
+            if (item._id === chat._id) {
+              return {
+                ...item,
+                members: item.members.filter(
+                  (member) => member._id !== user._id,
+                ),
+              };
+            }
+            return item;
+          });
         });
-        props.setChats(newChatList);
       }
     });
 
@@ -146,25 +147,32 @@ const ChatList = (props) => {
                   return (
                     <div
                       key={index}
-                      className={`${index > 0 && '-ml-1.5'} group/profile text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl ring-2 transition duration-300 hover:bg-transparent dark:bg-gray-700 ${props.activeId === chat._id ? 'ring-yellow-200 group-hover/chat:ring-yellow-300' : 'ring-gray-100 group-hover/chat:ring-gray-200 dark:ring-gray-900 group-hover/chat:dark:ring-gray-800'}`}
+                      className={`${index > 0 && '-ml-1.5'} group/profile text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl ring-2 transition duration-300 dark:bg-gray-700 ${props.activeId === chat._id ? 'ring-yellow-200 group-hover/chat:ring-yellow-300' : 'ring-gray-100 group-hover/chat:ring-gray-200 dark:ring-gray-900 group-hover/chat:dark:ring-gray-800'}`}
                     >
-                      <button
-                        type="submit"
-                        className={`group/button hidden size-10 scale-105 items-center justify-center rounded-full bg-transparent p-1 text-transparent transition duration-300 group-hover/profile:flex ${props.activeId === chat._id ? 'hover:bg-yellow-300' : 'hover:bg-gray-800'} `}
-                        onClick={() => removeFromChat(chat._id, member._id)}
-                      >
-                        <p
-                          className={`group-hover/button:text-tertiary pointer-events-none absolute -translate-y-7 translate-x-1/2 text-nowrap rounded border-transparent p-1 text-sm text-transparent duration-300 group-hover/button:bg-gray-100 group-hover/button:dark:bg-gray-900`}
+                      {props.activeId !== chat._id && (
+                        <button
+                          className={`group/button hidden size-10 scale-105 items-center justify-center rounded-full bg-transparent p-1 text-transparent transition duration-300 group-hover/profile:flex ${props.activeId === chat._id ? 'hover:bg-yellow-300' : 'hover:bg-gray-800'} `}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            removeFromChat(chat._id, member._id);
+                          }}
                         >
-                          {`Remove ${member.username} from chat`}
-                        </p>
-                        <Icon
-                          className={`${props.activeId === chat._id && 'text-gray-900'} text-primary`}
-                          path={mdiMinus}
-                          size={1.2}
-                        ></Icon>
-                      </button>
-                      <p className="block group-hover/profile:hidden">
+                          <p
+                            className={`group-hover/button:text-tertiary pointer-events-none absolute -translate-y-7 translate-x-1/2 text-nowrap rounded border-transparent p-1 text-sm text-transparent duration-300 group-hover/button:bg-gray-100 group-hover/button:dark:bg-gray-900`}
+                          >
+                            {`Remove ${member.username} from chat`}
+                          </p>
+                          <Icon
+                            className={`${props.activeId === chat._id && 'text-gray-900'} text-primary`}
+                            path={mdiMinus}
+                            size={1.2}
+                          ></Icon>
+                        </button>
+                      )}
+                      <p
+                        className={`block ${props.activeId !== chat._id && 'group-hover/profile:hidden'}`}
+                      >
                         {member.username[0].toUpperCase()}
                       </p>
                     </div>
@@ -178,7 +186,10 @@ const ChatList = (props) => {
                   labelClass={'-translate-x-full'}
                   label="Delete chat"
                   icon={mdiTrashCanOutline}
-                  onClick={() => deleteChat(chat._id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteChat(chat._id);
+                  }}
                 />
               )}
             </li>
