@@ -74,6 +74,20 @@ const FriendList = (props) => {
       }
     });
 
+    socket.on('addToChat', (chat) => {
+      const memberIds = chat.members.map((member) => member._id);
+      if (memberIds.includes(currentUser._id)) {
+        props.setChats((prevChats) => {
+          return prevChats.map((item) => {
+            if (item._id === chat._id) {
+              return chat;
+            }
+            return item;
+          });
+        });
+      }
+    });
+
     return () => {
       socket.disconnect();
     };

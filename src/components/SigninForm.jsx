@@ -34,6 +34,7 @@ const SigninForm = () => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
+      console.log(result);
       if (response.ok) {
         console.log(result.token);
         await localStorage.setItem('token', result.token);

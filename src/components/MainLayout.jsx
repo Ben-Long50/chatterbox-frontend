@@ -45,9 +45,6 @@ const MainLayout = () => {
       }
     };
     fetchChats();
-    // return () => {
-    //   localStorage.removeItem('activeId');
-    // };
   }, [currentUser._id]);
 
   const handleVisibility = () => {
@@ -64,6 +61,7 @@ const MainLayout = () => {
     >
       <Sidebar
         chats={chats}
+        setChats={setChats}
         activeId={activeId}
         setActiveId={setActiveId}
         visibility={visibility}

@@ -100,6 +100,8 @@ const Sidebar = (props) => {
               activeId={props.activeId}
               handleId={handleId}
               hideSidebar={hideSidebar}
+              chats={props.chats}
+              setChats={props.setChats}
             />
           </li>
           <hr className="my-2 border-t border-gray-400 dark:border-gray-500" />
