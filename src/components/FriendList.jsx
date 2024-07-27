@@ -74,9 +74,10 @@ const FriendList = (props) => {
       }
     });
 
-    socket.on('addToChat', (chat) => {
+    socket.on('addToChat', ({ chat, user }) => {
       const memberIds = chat.members.map((member) => member._id);
-      if (memberIds.includes(currentUser._id)) {
+      const filteredIds = memberIds.filter((id) => id !== user._id);
+      if (filteredIds.includes(currentUser._id)) {
         props.setChats((prevChats) => {
           return prevChats.map((item) => {
             if (item._id === chat._id) {
@@ -85,6 +86,9 @@ const FriendList = (props) => {
             return item;
           });
         });
+      }
+      if (user._id === currentUser._id) {
+        props.setChats((prevChats) => [...prevChats, chat]);
       }
     });
 
