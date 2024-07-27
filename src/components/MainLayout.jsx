@@ -15,7 +15,6 @@ const MainLayout = () => {
 
   useEffect(() => {
     setLoading(true);
-    console.log(currentUser);
     const token = localStorage.getItem('token');
     const fetchChats = async () => {
       try {
@@ -70,7 +69,7 @@ const MainLayout = () => {
         theme={theme}
         changeTheme={changeTheme}
       />
-      <Outlet context={[activeId, setActiveId, visibility]} />
+      <Outlet context={[activeId, setActiveId, visibility, chats]} />
     </div>
   );
 };

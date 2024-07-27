@@ -20,7 +20,7 @@ const Chat = () => {
     members: [],
   });
   const [draft, setDraft] = useState('');
-  const [activeId, setActiveId, visibility] = useOutletContext();
+  const [activeId, setActiveId, visibility, chats] = useOutletContext();
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
@@ -85,7 +85,7 @@ const Chat = () => {
       socket.emit('leaveChat', activeId);
       socket.disconnect();
     };
-  }, [activeId]);
+  }, [activeId, chats]);
 
   const handleChange = (e) => {
     setDraft(e.target.value);

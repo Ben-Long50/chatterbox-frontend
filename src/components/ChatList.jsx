@@ -2,20 +2,50 @@ import List from './List';
 import { Link } from 'react-router-dom';
 import Icon from '@mdi/react';
 import { mdiTrashCanOutline, mdiPlus } from '@mdi/js';
-import { useContext, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { AuthContext } from './AuthContext';
 import Label from './Label';
+import { io } from 'socket.io-client';
 
 const ChatList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const socket = io(apiUrl, {
+      query: { token },
+    });
+
+    socketRef.current = socket;
+
+    socket.on('createChat', ({ chat, user }) => {
+      const newChat = { ...chat, members: [currentUser] };
+      if (user._id === currentUser._id) {
+        props.setChats((prevChats) => [...prevChats, newChat]);
+      }
+    });
+
+    socket.on('deleteChat', (chat) => {
+      const memberIds = chat.members;
+      if (memberIds.includes(currentUser._id)) {
+        props.setChats((prevChats) =>
+          prevChats.filter((item) => item._id !== chat._id),
+        );
+      }
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [currentUser, props]);
 
   const createChat = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
     const chat = { name: inputRef.current.value, author: currentUser._id };
-
+    inputRef.current.value = '';
     try {
       const response = await fetch(`${apiUrl}/chats`, {
         method: 'POST',
@@ -28,7 +58,6 @@ const ChatList = (props) => {
       const result = await response.json();
       if (response.ok) {
         console.log(result.message);
-        inputRef.current.value = '';
       }
     } catch (error) {
       console.error(error);
