@@ -44,7 +44,10 @@ const ProfilePage = () => {
         ]);
         setBestFriends(bestFriendData);
         setUserInfo(userData);
-        setFormData({ username: userData.username, bio: userData.profile.bio });
+        setFormData({
+          username: userData.username,
+          bio: userData.profile?.bio,
+        });
       } catch (error) {
         console.error(error);
       } finally {
@@ -171,7 +174,7 @@ const ProfilePage = () => {
       className={`row-start-1 mx-auto mb-auto h-dvh w-full min-w-0 max-xl:col-start-1 max-xl:col-end-3 md:gap-y-16 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
       <div className="mx-auto grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 md:pt-20 lg:px-8 lg:pb-8">
-        <div className="col-span-2 w-full items-center gap-12 justify-self-center md:flex-row">
+        <div className="col-span-2 w-full gap-12 justify-self-center md:flex-row">
           <div className="flex flex-col items-center justify-center gap-12 md:flex-row">
             <ProfilePic
               username={userInfo.username}
@@ -193,21 +196,23 @@ const ProfilePage = () => {
               />
             )}
           </div>
-          {!editMode ? (
-            <p className="text-secondary mx-6 mb-4 mt-12 text-left text-2xl md:mx-10">
-              {userInfo.profile?.bio || ''}
-            </p>
-          ) : (
-            <textarea
-              ref={bioInputRef}
-              value={formData.bio}
-              name="bio"
-              onChange={handleChange}
-              className="text-primary mb-4 mt-12 h-44 w-full rounded-lg bg-gray-200 p-2 text-2xl dark:bg-gray-800"
-              type="text"
-              placeholder="Enter bio"
-            />
-          )}
+          <div className="flex justify-center">
+            {!editMode ? (
+              <p className="text-secondary mx-6 mb-4 mt-12 text-left text-2xl md:mx-10">
+                {userInfo.profile?.bio || ''}
+              </p>
+            ) : (
+              <textarea
+                ref={bioInputRef}
+                value={formData.bio}
+                name="bio"
+                onChange={handleChange}
+                className="text-primary mb-4 mt-12 h-44 w-full rounded-lg bg-gray-200 p-2 text-2xl dark:bg-gray-800"
+                type="text"
+                placeholder="Enter bio"
+              />
+            )}
+          </div>
         </div>
 
         <InfoBox
