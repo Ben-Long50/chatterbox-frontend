@@ -4,7 +4,6 @@ import Form from './Form';
 import InputField from './InputField';
 import Button from './Button';
 import { AuthContext } from './AuthContext';
-import { jwtDecode } from 'jwt-decode';
 
 const SigninForm = () => {
   const [formData, setFormData] = useState({
@@ -34,9 +33,7 @@ const SigninForm = () => {
         body: JSON.stringify(formData),
       });
       const result = await response.json();
-      console.log(result);
       if (response.ok) {
-        console.log(result.token);
         await localStorage.setItem('token', result.token);
         signin();
         navigate('/chats/global');

@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
     }
   });
 
-  const apiUrl = 'https://chatterbox-messenger.adaptable.app';
+  const apiUrl = 'http://localhost:3000';
 
   const authTimer = 1000 * 60 * 60 * 4;
 
