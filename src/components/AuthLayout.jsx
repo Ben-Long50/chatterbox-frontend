@@ -32,8 +32,7 @@ const AuthLayout = () => {
             Welcome to Chatterbox!
           </h1>
           <h2 className="text-secondary z-10 text-2xl/normal">
-            An anonymous chat room where you can make friends, exclusive chat
-            rooms or even send a message to everyone in the global chat room!
+            The premier anonymous chat room of the web
           </h2>
         </div>
       </div>
