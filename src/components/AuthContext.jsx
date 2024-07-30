@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
   });
   const [currentUser, setCurrentUser] = useState({});
 
-  const apiUrl = 'https://chatterbox-messenger.adaptable.app';
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     setLoading(true);
