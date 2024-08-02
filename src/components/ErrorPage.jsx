@@ -16,9 +16,9 @@ const ErrorPage = () => {
 
       <Link
         className="accent-primary rounded px-4 py-3 text-xl text-gray-900 transition duration-300 hover:scale-105"
-        to={token ? '/chats/global' : '/signin'}
+        to={token ? '/signin' : '/signin'}
       >
-        {token ? 'Home' : 'Signin'}
+        {token ? 'Sign in' : 'Sign in'}
       </Link>
     </div>
   );
