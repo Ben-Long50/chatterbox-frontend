@@ -153,7 +153,7 @@ const FriendList = (props) => {
   };
 
   return (
-    <List heading="Friends">
+    <>
       <input
         ref={inputRef}
         className="text-primary my-2 w-full rounded bg-gray-200 p-2 dark:bg-gray-700"
@@ -207,7 +207,7 @@ const FriendList = (props) => {
           </li>
         );
       })}
-    </List>
+    </>
   );
 };
 

@@ -125,9 +125,6 @@ const Chat = () => {
 
   return (
     <PerfectScrollbar
-      options={{
-        wheelSpeed: 1 / 2,
-      }}
       className={`row-start-1 h-dvh w-full min-w-0 flex-col overflow-y-auto max-lg:col-start-1 max-lg:col-end-3 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
       <div className="flex min-h-dvh flex-col items-center justify-between">

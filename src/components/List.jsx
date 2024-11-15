@@ -1,5 +1,5 @@
 import Icon from '@mdi/react';
-import { mdiChevronDown } from '@mdi/js';
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
 import { useEffect, useState } from 'react';
 
 const List = (props) => {
@@ -20,17 +20,17 @@ const List = (props) => {
 
   return (
     <details
-      className="group [&_summary::-webkit-details-marker]:hidden"
+      className={`${props.className} group [&_summary::-webkit-details-marker]:hidden`}
       open={display}
     >
       <summary
         className="list-primary flex items-center justify-between"
         onClick={toggleMenu}
       >
-        <span className="text-base font-medium"> {props.heading} </span>
-        <span className="shrink-0 transition duration-300 group-open:-rotate-180">
+        <span className="text-lg font-medium"> {props.heading} </span>
+        <span className="shrink-0 transition duration-300 group-open:rotate-180">
           <Icon
-            path={mdiChevronDown}
+            path={mdiChevronUp}
             size={1.1}
             className={`text-secondary`}
           ></Icon>
