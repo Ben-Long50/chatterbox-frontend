@@ -52,7 +52,7 @@ const Sidebar = (props) => {
 
   return (
     <div
-      className={`bg-primary relative z-10 col-end-2 row-start-1 flex h-dvh min-w-0 flex-col transition duration-300 max-sm:col-start-1 max-sm:col-end-3 ${!props.visibility && '-translate-x-full'} sticky top-0 overflow-y-hidden`}
+      className={`bg-primary relative z-10 col-end-2 row-start-1 flex h-dvh min-w-0 flex-col transition duration-300 max-sm:col-start-1 max-sm:col-end-3 ${!props.visibility && '-translate-x-full'} sticky top-0`}
     >
       <div className="relative flex items-center justify-between py-4 pl-4">
         <h1 className="text-primary place-content-center text-3xl font-semibold">
@@ -116,7 +116,7 @@ const Sidebar = (props) => {
           hideSidebar={hideSidebar}
         />
       )}
-      {activeTab === 'memebers' && (
+      {activeTab === 'members' && (
         <MemberList
           activeId={props.activeId}
           handleId={handleId}
