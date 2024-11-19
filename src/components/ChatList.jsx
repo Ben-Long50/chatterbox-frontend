@@ -1,4 +1,3 @@
-import List from './List';
 import { Link } from 'react-router-dom';
 import Icon from '@mdi/react';
 import { mdiTrashCanOutline, mdiPlus, mdiMinus } from '@mdi/js';
@@ -7,6 +6,9 @@ import { AuthContext } from './AuthContext';
 import Label from './Label';
 import { io } from 'socket.io-client';
 import ScrollBar from 'react-perfect-scrollbar';
+import useCreateChatMutation from '../hooks/useCreateChatMutation/useCreateChatMutation';
+import useDeleteChatMutation from '../hooks/useDeleteChatMutation/useDeleteChatMutation';
+import useRemoveFromChatMutation from '../hooks/useRemoveFromChatMutation/useRemoveFromChatMutation';
 
 const ChatList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
@@ -67,63 +69,14 @@ const ChatList = (props) => {
     };
   }, [currentUser, props]);
 
-  const createChat = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
+  const createChat = useCreateChatMutation(apiUrl);
+  const deleteChat = useDeleteChatMutation(apiUrl);
+  const removeFromChat = useRemoveFromChatMutation(apiUrl);
+
+  const handleCreateChat = () => {
     const chat = { name: inputRef.current.value, author: currentUser._id };
     inputRef.current.value = '';
-    try {
-      const response = await fetch(`${apiUrl}/chats`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(chat),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        console.log(result.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const removeFromChat = async (chatId, memberId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/chats/${chatId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ chatId, memberId }),
-      });
-      const result = await response.json();
-      console.log(result.message);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleteChat = async (chatId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${apiUrl}/chats/${chatId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ chatId }),
-      });
-      const result = await response.json();
-      console.log(result.message);
-    } catch (error) {
-      console.error(error);
-    }
+    createChat.mutate(chat);
   };
 
   return (
@@ -157,7 +110,10 @@ const ChatList = (props) => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              removeFromChat(chat._id, member._id);
+                              removeFromChat.mutate({
+                                chatId: chat._id,
+                                memberId: member._id,
+                              });
                             }}
                           >
                             <p
@@ -190,7 +146,7 @@ const ChatList = (props) => {
                     icon={mdiTrashCanOutline}
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteChat(chat._id);
+                      deleteChat.mutate(chat._id);
                     }}
                   />
                 )}
@@ -200,7 +156,7 @@ const ChatList = (props) => {
         })}
       </ScrollBar>
       <form
-        onSubmit={createChat}
+        onSubmit={handleCreateChat}
         className="mt-2 flex items-center justify-start gap-4 px-4"
       >
         <input

@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import Label from './Label';
 import { mdiTrashCanOutline } from '@mdi/js';
 import { AuthContext } from './AuthContext';
+import useDeleteMessageMutation from '../hooks/useDeleteMessageMutation/useDeleteMessageMutation';
 
 const MessageSent = (props) => {
   const [boxWidth, setBoxWidth] = useState(null);
@@ -14,26 +15,12 @@ const MessageSent = (props) => {
     setBoxWidth(boxRect.width);
   }, []);
 
-  const deleteMessage = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${apiUrl}/chats/${props.chatId}/messages/${props.id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ userId: currentUser._id }),
-        },
-      );
-      const result = await response.json();
-      console.log(result.message);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const deleteMessage = useDeleteMessageMutation(
+    props.id,
+    props.chatId,
+    currentUser,
+    apiUrl,
+  );
 
   return (
     <div className="group/message mb-1 flex flex-col self-end">
@@ -46,7 +33,7 @@ const MessageSent = (props) => {
           labelClass={'translate-x-7'}
           label="Delete message"
           icon={mdiTrashCanOutline}
-          onClick={deleteMessage}
+          onClick={() => deleteMessage.mutate()}
         />
         <div ref={boxRef} className="message-sent">
           <div className="text-primary float-right ml-4 flex size-12 shrink-0 items-center justify-center rounded-full bg-white object-cover text-center text-3xl dark:bg-gray-700">

@@ -5,39 +5,27 @@ import { mdiPlus, mdiMinus } from '@mdi/js';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { io } from 'socket.io-client';
+import useFriendQuery from '../hooks/useFriendQuery/useFriendQuery';
+import useAddFriendToChatMutation from '../hooks/useAddFriendToChatMutation/useAddFriendToChatMutation';
+import useRemoveFriendMutation from '../hooks/useRemoveFriendMutation/useRemoveFriendMutation';
 
 const FriendList = (props) => {
-  const [friends, setFriends] = useState([]);
-  const [filteredFriends, setFilteredFriends] = useState([]);
   const { apiUrl, currentUser } = useContext(AuthContext);
+  const friends = useFriendQuery(currentUser, apiUrl);
+  const [filteredFriends, setFilteredFriends] = useState([]);
+
+  useEffect(() => {
+    setFilteredFriends(friends?.data);
+  }, [friends.data]);
 
   const inputRef = useRef(null);
   const socketRef = useRef(null);
 
+  const addFriendToChat = useAddFriendToChatMutation(props.activeId, apiUrl);
+  const removeFriend = useRemoveFriendMutation(currentUser, apiUrl);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const fetchFriends = async () => {
-      try {
-        const response = await fetch(
-          `${apiUrl}/users/${currentUser._id}/friends`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setFriends(data);
-          setFilteredFriends(data);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchFriends();
-
     const socket = io(apiUrl, {
       query: { token },
     });
@@ -110,48 +98,6 @@ const FriendList = (props) => {
     }
   };
 
-  const addFriendToChat = async (friendId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${apiUrl}/chats/${props.activeId}/members`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ friendId }),
-        },
-      );
-      const result = await response.json();
-      console.log(result.message);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const removeFriend = async (friendId) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${apiUrl}/users/${currentUser._id}/friends`,
-        {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ friendId }),
-        },
-      );
-      const result = await response.json();
-      console.log(result.message);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <>
       <input
@@ -162,52 +108,53 @@ const FriendList = (props) => {
         onChange={handleChange}
       />
       <ScrollBar className="my-2 flex grow flex-col gap-2 overflow-y-auto px-4">
-        {filteredFriends.map((friend) => {
-          return (
-            <li
-              key={friend._id}
-              className={`list-secondary group/friend flex items-center ${props.activeId === friend._id && 'accent-primary'}`}
-            >
-              <Link
-                to={`/users/${friend.username}`}
-                id={friend._id}
-                className="flex flex-grow items-center gap-4 p-3"
-                state={{ userId: friend._id }}
-                onClick={() => {
-                  props.handleId(friend._id);
-                  props.hideSidebar();
-                }}
+        {filteredFriends?.length > 0 &&
+          filteredFriends.map((friend) => {
+            return (
+              <li
+                key={friend._id}
+                className={`list-secondary group/friend flex items-center ${props.activeId === friend._id && 'accent-primary'}`}
               >
-                <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
-                  <p>{friend.username[0].toUpperCase()}</p>
-                </div>
-                <p>{friend.username}</p>
-              </Link>
-              {props.activeId !== 'global' && (
+                <Link
+                  to={`/users/${friend.username}`}
+                  id={friend._id}
+                  className="flex flex-grow items-center gap-4 p-3"
+                  state={{ userId: friend._id }}
+                  onClick={() => {
+                    props.handleId(friend._id);
+                    props.hideSidebar();
+                  }}
+                >
+                  <div className="text-primary -my-3 -ml-2 flex size-10 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-2xl dark:bg-gray-700">
+                    <p>{friend.username[0].toUpperCase()}</p>
+                  </div>
+                  <p>{friend.username}</p>
+                </Link>
+                {props.activeId !== 'global' && (
+                  <Label
+                    buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
+                    labelClass={'-translate-x-full'}
+                    label="Add friend to active chat"
+                    icon={mdiPlus}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addFriendToChat.mutate(friend._id);
+                    }}
+                  />
+                )}
                 <Label
                   buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
                   labelClass={'-translate-x-full'}
-                  label="Add friend to active chat"
-                  icon={mdiPlus}
+                  label="Remove as friend"
+                  icon={mdiMinus}
                   onClick={(e) => {
                     e.stopPropagation();
-                    addFriendToChat(friend._id);
+                    removeFriend.mutate(friend._id);
                   }}
                 />
-              )}
-              <Label
-                buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
-                labelClass={'-translate-x-full'}
-                label="Remove as friend"
-                icon={mdiMinus}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFriend(friend._id);
-                }}
-              />
-            </li>
-          );
-        })}
+              </li>
+            );
+          })}
       </ScrollBar>
     </>
   );

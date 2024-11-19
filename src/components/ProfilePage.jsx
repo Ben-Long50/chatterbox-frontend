@@ -12,13 +12,14 @@ import './../custom-scrollbar.css';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import Loading from './Loading';
+import useBestFriendQuery from '../hooks/useBestFriendQuery/useBestFriendQuery';
+import useUserInfoQuery from '../hooks/useUserInfoQuery/useUserInfoQuery';
+import useDeleteProfileMutation from '../hooks/useDeleteProfileMutation/useDeleteProfileMutation';
+import useUpdateProfileMutation from '../hooks/useUpdateProfileMutation/useUpdateProfileMutation';
 
 const ProfilePage = () => {
   const location = useLocation();
   const { userId } = location.state || {};
-  const [loading, setLoading] = useState(true);
-  const [bestFriends, setBestFriends] = useState([]);
-  const [userInfo, setUserInfo] = useState({});
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -32,30 +33,19 @@ const ProfilePage = () => {
   const usernameInputRef = useRef(null);
   const bioInputRef = useRef(null);
 
+  const bestFriends = useBestFriendQuery(userId, apiUrl);
+  const userInfo = useUserInfoQuery(userId, apiUrl);
+
+  const updateProfile = useUpdateProfileMutation(currentUser, apiUrl);
+  const deleteProfile = useDeleteProfileMutation(currentUser, apiUrl, signout);
+
   useEffect(() => {
     setEditMode(false);
-    setLoading(true);
-    const token = localStorage.getItem('token');
-    const fetchData = async () => {
-      try {
-        const [bestFriendData, userData] = await Promise.all([
-          fetchBestFriends(token),
-          fetchUserInfo(token),
-        ]);
-        setBestFriends(bestFriendData);
-        setUserInfo(userData);
-        setFormData({
-          username: userData.username,
-          bio: userData.profile?.bio,
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [userId]);
+    setFormData({
+      username: userInfo.data?.username,
+      bio: userInfo.data?.profile?.bio,
+    });
+  }, [userId, userInfo.data]);
 
   const handleId = (id) => {
     setActiveId(id);
@@ -82,107 +72,28 @@ const ProfilePage = () => {
     }
   };
 
-  const fetchBestFriends = async (token) => {
-    try {
-      const response = await fetch(`${apiUrl}/users/${userId}/friends/best`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  if (bestFriends.isLoading || bestFriends.isPending) {
+    return <Loading />;
+  }
 
-  const fetchUserInfo = async (token) => {
-    try {
-      const response = await fetch(`${apiUrl}/users/${userId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const updateProfile = async () => {
-    const token = localStorage.getItem('token');
-
-    try {
-      const response = await fetch(`${apiUrl}/users/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          bio: formData.bio,
-        }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleteProfile = async () => {
-    const token = localStorage.getItem('token');
-
-    try {
-      const response = await fetch(`${apiUrl}/users/${currentUser._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        console.log(data.message);
-        signout();
-        navigate('/signin');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  if (loading) {
+  if (userInfo.isLoading || userInfo.isPending) {
     return <Loading />;
   }
 
   return (
     <PerfectScrollbar
-      options={{
-        wheelSpeed: 1 / 2,
-      }}
       className={`row-start-1 mx-auto mb-auto h-dvh w-full min-w-0 max-xl:col-start-1 max-xl:col-end-3 md:gap-y-16 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
       <div className="mx-auto grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 md:pt-20 lg:px-8 lg:pb-8">
         <div className="col-span-2 w-full gap-12 justify-self-center md:flex-row">
           <div className="flex flex-col items-center justify-center gap-12 md:flex-row">
             <ProfilePic
-              username={userInfo.username}
+              username={userInfo.data.username}
               className="block size-48 shrink-0 bg-gray-200 text-9xl md:float-left md:size-56 dark:bg-gray-900"
             />
             {!editMode ? (
               <h1 className="text-primary text-center text-6xl font-semibold md:text-8xl">
-                {userInfo.username}
+                {userInfo.data.username}
               </h1>
             ) : (
               <input
@@ -199,7 +110,7 @@ const ProfilePage = () => {
           <div className="flex justify-center">
             {!editMode ? (
               <p className="text-secondary mx-6 mb-4 mt-12 text-left text-2xl md:mx-10">
-                {userInfo.profile?.bio || ''}
+                {userInfo.data.profile?.bio || ''}
               </p>
             ) : (
               <textarea
@@ -219,7 +130,7 @@ const ProfilePage = () => {
           className="col-span-2 mb-auto md:col-span-1"
           heading="Best Friends"
         >
-          {bestFriends?.map((friend, index) => {
+          {bestFriends?.data.map((friend, index) => {
             if (index < 5) {
               return (
                 <>
@@ -249,7 +160,7 @@ const ProfilePage = () => {
           })}
         </InfoBox>
         <InfoBox className="col-span-2 md:col-span-1" heading="Friends">
-          {userInfo.friends.map((friend, index) => {
+          {userInfo.data.friends.map((friend, index) => {
             return (
               <>
                 <Link
@@ -276,18 +187,18 @@ const ProfilePage = () => {
         <InfoBox className="col-span-2" heading="Statistics">
           <div className="flex w-full justify-between px-4 py-1">
             <p>Total messages sent</p>
-            <span>{userInfo.messages.length}</span>
+            <span>{userInfo.data.messages.length}</span>
           </div>
           <div className="flex w-full justify-between px-4 py-1">
             <p>Total chats active in</p>
-            <span>{userInfo.chats.length}</span>
+            <span>{userInfo.data.chats.length}</span>
           </div>
           <div className="flex w-full justify-between px-4 py-1">
             <p>Total number of friends</p>
-            <span>{userInfo.friends.length}</span>
+            <span>{userInfo.data.friends.length}</span>
           </div>
         </InfoBox>
-        {currentUser._id === userInfo._id && (
+        {currentUser._id === userInfo.data._id && (
           <div
             className={`col-span-2 flex gap-8 ${!deleteMode && !editMode && 'justify-between'} ${deleteMode && 'justify-end'} ${editMode && 'justify-start'}`}
           >
@@ -313,7 +224,7 @@ const ProfilePage = () => {
                   className="accent-primary rounded p-2 hover:scale-105"
                   onClick={() => {
                     setEditMode(!editMode);
-                    updateProfile();
+                    updateProfile.mutate(formData);
                   }}
                 >
                   Submit changes
@@ -332,7 +243,7 @@ const ProfilePage = () => {
                   className="accent-primary rounded p-2 hover:scale-105 hover:bg-red-500"
                   onClick={() => {
                     setDeleteMode(!deleteMode);
-                    deleteProfile();
+                    deleteProfile.mutate();
                   }}
                 >
                   Confirm Delete

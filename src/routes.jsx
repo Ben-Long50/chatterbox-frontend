@@ -1,4 +1,4 @@
-import App from './components/App';
+import App from './App';
 import ErrorPage from './components/ErrorPage';
 import {
   Route,
@@ -21,7 +21,7 @@ const router = createBrowserRouter(
         <Route path="signup" element={<SignupForm />} />
         <Route index path="signin" element={<SigninForm />} />
       </Route>
-      <Route path="/" element={<MainLayout />} errorElement={<ErrorPage />}>
+      <Route path="/" element={<MainLayout />}>
         <Route path="chats/:chatName" element={<Chat />} />
         <Route path="users/:username" element={<ProfilePage />} />
       </Route>

@@ -8,39 +8,17 @@ import { mdiChevronLeft, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import { AuthContext } from './AuthContext';
 import FriendList from './FriendList';
 import MemberList from './MemberList';
-import Button from './Button';
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import PerfectScrollbar from 'react-perfect-scrollbar';
 import NavButton from './NavButton';
-import ScrollBar from 'react-perfect-scrollbar';
+import { LayoutContext } from './LayoutContext';
 
 const Sidebar = (props) => {
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+  const { layoutSize } = useContext(LayoutContext);
   const [activeTab, setActiveTab] = useState('chats');
   const { signout, currentUser } = useContext(AuthContext);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    handleResize();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
   const hideSidebar = () => {
-    if (windowSize.width < 1024) {
+    if (layoutSize !== 'large') {
       props.setVisibility(false);
     }
   };
@@ -52,14 +30,14 @@ const Sidebar = (props) => {
 
   return (
     <div
-      className={`bg-primary relative z-10 col-end-2 row-start-1 flex h-dvh min-w-0 flex-col transition duration-300 max-sm:col-start-1 max-sm:col-end-3 ${!props.visibility && '-translate-x-full'} sticky top-0`}
+      className={`bg-primary relative z-10 row-start-1 flex h-dvh min-w-0 flex-col transition duration-300 ${layoutSize === 'xsmall' || layoutSize === 'small' ? 'col-start-1 col-end-3' : 'col-start-1 col-end-2'} ${!props.visibility && '-translate-x-full'} sticky top-0`}
     >
       <div className="relative flex items-center justify-between py-4 pl-4">
         <h1 className="text-primary place-content-center text-3xl font-semibold">
           Chatterbox
         </h1>
         <button
-          className={`accent-primary absolute right-4 top-1/2 z-20 grid shrink-0 -translate-y-1/2 place-content-center rounded-full border-b hover:scale-110 ${!props.visibility && 'translate-x-180'}`}
+          className={`accent-primary absolute right-4 top-1/2 z-20 grid shrink-0 -translate-y-1/2 place-content-center rounded-full border-b hover:scale-110 ${!props.visibility && 'visible translate-x-180'}`}
           onClick={props.handleVisibility}
         >
           <Icon
@@ -89,9 +67,9 @@ const Sidebar = (props) => {
         <>
           <Link
             to="chats/global"
-            className={`list-primary mx-4 my-2 ${props.activeId === props.chats[0]?._id ? 'accent-primary' : ''} text-lg font-semibold`}
+            className={`list-primary mx-4 my-2 ${props.activeId === props.globalChat?._id ? 'accent-primary' : ''} text-lg font-semibold`}
             onClick={() => {
-              handleId(props.chats[0]._id);
+              handleId(props.globalChat._id);
               hideSidebar();
             }}
           >

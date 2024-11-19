@@ -11,17 +11,16 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import './../custom-scrollbar.css';
 import io from 'socket.io-client';
 import Loading from './Loading';
+import useChatInfoQuery from '../hooks/useChatInfoQuery/useChatInfoQuery';
+import useCreateMessageMutation from '../hooks/useCreateMessageMutation/useCreateMessageMutation';
 
 const Chat = () => {
-  const [loading, setLoading] = useState(true);
-  const [chatInfo, setChatInfo] = useState({
-    name: '',
-    messages: [],
-    members: [],
-  });
   const [draft, setDraft] = useState('');
   const [activeId, setActiveId, visibility, chats] = useOutletContext();
   const { apiUrl, currentUser } = useContext(AuthContext);
+
+  const chatInfo = useChatInfoQuery(activeId, apiUrl);
+  const createMessage = useCreateMessageMutation(activeId, apiUrl);
 
   const inputRef = useRef(null);
   const socketRef = useRef(null);
@@ -31,31 +30,10 @@ const Chat = () => {
     setTimeout(() => {
       bottomRef.current?.scrollIntoView({ block: 'start' });
     }, 1);
-  }, [loading, chatInfo]);
+  }, [chatInfo]);
 
   useEffect(() => {
-    setLoading(true);
     const token = localStorage.getItem('token');
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/chats/${activeId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setChatInfo(data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-
     const socket = io(apiUrl, {
       query: { token },
     });
@@ -93,33 +71,16 @@ const Chat = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
     const message = {
       message: draft,
       author: currentUser._id,
       date: new Date(),
     };
-
-    try {
-      const response = await fetch(`${apiUrl}/chats/${activeId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(message),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        setDraft('');
-        inputRef.current.value = '';
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    createMessage.mutate(message);
+    setDraft('');
   };
 
-  if (loading) {
+  if (chatInfo.isLoading || chatInfo.isPending) {
     return <Loading />;
   }
 
@@ -129,7 +90,7 @@ const Chat = () => {
     >
       <div className="flex min-h-dvh flex-col items-center justify-between">
         <div className="sticky top-0 flex w-full justify-center bg-gradient-to-b from-white from-10% to-transparent pt-8 dark:from-gray-700">
-          {chatInfo.members.map((member, index) => {
+          {chatInfo.data.members.map((member, index) => {
             return (
               <div
                 key={index}
@@ -140,14 +101,14 @@ const Chat = () => {
             );
           })}
           <h1 className="text-primary mb-40 ml-4 mt-1 text-center text-4xl font-semibold">
-            {chatInfo.name}
+            {chatInfo.data.name}
           </h1>
         </div>
         <div className="mx-auto w-full max-w-screen-xl shrink-0 gap-1 self-end px-4 pb-4 lg:px-8 lg:pb-8">
-          {chatInfo.messages.map((message, index) => {
+          {chatInfo.data.messages.map((message, index) => {
             const isNewDate =
               index === 0 ||
-              format(chatInfo.messages[index - 1].date, 'PP') !==
+              format(chatInfo.data.messages[index - 1].date, 'PP') !==
                 format(message.date, 'PP');
             return (
               <>
@@ -187,6 +148,7 @@ const Chat = () => {
               type="text"
               placeholder="The world awaits your message..."
               onChange={handleChange}
+              value={draft}
             />
             <button
               type="submit"

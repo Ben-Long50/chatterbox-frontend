@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Loading from './Loading';
+import { useQueryClient } from '@tanstack/react-query';
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     const token = localStorage.getItem('token');
@@ -62,6 +64,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     localStorage.removeItem('activeId');
     localStorage.removeItem('token');
+    queryClient.clear();
   };
 
   if (loading) {
