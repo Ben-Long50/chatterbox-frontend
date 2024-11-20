@@ -133,7 +133,7 @@ const Chat = () => {
           })}
           <form
             method="post"
-            className="mt-12 flex items-center justify-center gap-6 max-md:gap-3 md:ml-auto md:mr-auto"
+            className="mt-4 flex items-center justify-center gap-6 max-md:gap-3 md:ml-auto md:mr-auto lg:mt-12"
             onSubmit={handleSubmit}
           >
             <input

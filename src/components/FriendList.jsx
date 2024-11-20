@@ -43,10 +43,6 @@ const FriendList = (props) => {
       queryClient.invalidateQueries(['friends']);
     });
 
-    socket.on('addToChat', () => {
-      queryClient.invalidateQueries(['chats']);
-    });
-
     return () => {
       socket.disconnect();
     };

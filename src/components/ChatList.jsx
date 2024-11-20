@@ -39,6 +39,10 @@ const ChatList = (props) => {
       queryClient.invalidateQueries(['chats']);
     });
 
+    socket.on('addToChat', () => {
+      queryClient.invalidateQueries(['chats']);
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -131,7 +135,10 @@ const ChatList = (props) => {
         })}
       </ScrollBar>
       <form
-        onSubmit={handleCreateChat}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleCreateChat();
+        }}
         className="mt-2 flex items-center justify-start gap-4 px-4"
       >
         <input
