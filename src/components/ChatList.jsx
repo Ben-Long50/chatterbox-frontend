@@ -9,12 +9,15 @@ import ScrollBar from 'react-perfect-scrollbar';
 import useCreateChatMutation from '../hooks/useCreateChatMutation/useCreateChatMutation';
 import useDeleteChatMutation from '../hooks/useDeleteChatMutation/useDeleteChatMutation';
 import useRemoveFromChatMutation from '../hooks/useRemoveFromChatMutation/useRemoveFromChatMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const ChatList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
 
   const inputRef = useRef(null);
   const socketRef = useRef(null);
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -24,44 +27,16 @@ const ChatList = (props) => {
 
     socketRef.current = socket;
 
-    socket.on('createChat', ({ chat, user }) => {
-      const newChat = { ...chat, members: [currentUser] };
-      if (user._id === currentUser._id) {
-        props.setChats((prevChats) => [...prevChats, newChat]);
-      }
+    socket.on('createChat', () => {
+      queryClient.invalidateQueries(['chats']);
     });
 
-    socket.on('deleteChat', (chat) => {
-      const memberIds = chat.members;
-      if (memberIds.includes(currentUser._id)) {
-        props.setChats((prevChats) =>
-          prevChats.filter((item) => item._id !== chat._id),
-        );
-      }
+    socket.on('deleteChat', () => {
+      queryClient.invalidateQueries(['chats']);
     });
 
-    socket.on('removeFromChat', ({ chat, user }) => {
-      const memberIds = chat.members;
-
-      if (user._id === currentUser._id) {
-        props.setChats((prevChats) =>
-          prevChats.filter((item) => item._id !== chat._id),
-        );
-      } else if (memberIds.includes(currentUser._id)) {
-        props.setChats((prevChats) => {
-          return prevChats.map((item) => {
-            if (item._id === chat._id) {
-              return {
-                ...item,
-                members: item.members.filter(
-                  (member) => member._id !== user._id,
-                ),
-              };
-            }
-            return item;
-          });
-        });
-      }
+    socket.on('removeFromChat', () => {
+      queryClient.invalidateQueries(['chats']);
     });
 
     return () => {

@@ -8,6 +8,7 @@ import { io } from 'socket.io-client';
 import Loading from './Loading';
 import useMembersQuery from '../hooks/useMembersQuery/useMembersQuery';
 import useAddFriendMutation from '../hooks/useAddFriendMutation/useAddFriendMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const MemberList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
@@ -22,6 +23,7 @@ const MemberList = (props) => {
   const socketRef = useRef(null);
 
   const addFriend = useAddFriendMutation(currentUser, apiUrl);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,34 +34,12 @@ const MemberList = (props) => {
 
     socketRef.current = socket;
 
-    socket.on('removeMember', ({ newFriend, user }) => {
-      if (user._id === currentUser._id) {
-        setMembers((prevMembers) =>
-          prevMembers.filter((member) => member._id !== newFriend._id),
-        );
-        setFilteredMembers((prevFiltered) =>
-          prevFiltered.filter((member) => member._id !== newFriend._id),
-        );
-      }
-      if (newFriend._id === currentUser._id) {
-        setMembers((prevMembers) =>
-          prevMembers.filter((member) => member._id !== user._id),
-        );
-        setFilteredMembers((prevFiltered) =>
-          prevFiltered.filter((member) => member._id !== user._id),
-        );
-      }
+    socket.on('removeMember', () => {
+      queryClient.invalidateQueries(['members']);
     });
 
-    socket.on('addMember', ({ oldFriend, user }) => {
-      if (user._id === currentUser._id) {
-        setMembers((prevMembers) => [...prevMembers, oldFriend]);
-        setFilteredMembers((prevFiltered) => [...prevFiltered, oldFriend]);
-      }
-      if (oldFriend._id === currentUser._id) {
-        setMembers((prevFriends) => [...prevFriends, user]);
-        setFilteredMembers((prevFiltered) => [...prevFiltered, user]);
-      }
+    socket.on('addMember', () => {
+      queryClient.invalidateQueries(['members']);
     });
 
     return () => {

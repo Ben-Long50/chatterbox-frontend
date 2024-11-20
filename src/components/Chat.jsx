@@ -13,6 +13,7 @@ import io from 'socket.io-client';
 import Loading from './Loading';
 import useChatInfoQuery from '../hooks/useChatInfoQuery/useChatInfoQuery';
 import useCreateMessageMutation from '../hooks/useCreateMessageMutation/useCreateMessageMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Chat = () => {
   const [draft, setDraft] = useState('');
@@ -26,6 +27,8 @@ const Chat = () => {
   const socketRef = useRef(null);
   const bottomRef = useRef(null);
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     setTimeout(() => {
       bottomRef.current?.scrollIntoView({ block: 'start' });
@@ -37,26 +40,17 @@ const Chat = () => {
     const socket = io(apiUrl, {
       query: { token },
     });
+
     socketRef.current = socket;
 
     socket.emit('joinChat', activeId);
 
-    socket.on('newMessage', (message) => {
-      setChatInfo((prevChatInfo) => ({
-        ...prevChatInfo,
-        messages: [...prevChatInfo.messages, message],
-      }));
+    socket.on('newMessage', () => {
+      queryClient.invalidateQueries(['chatInfo']);
     });
 
-    socket.on('deletedMessage', (messageId) => {
-      setChatInfo((prevChatInfo) => ({
-        ...prevChatInfo,
-        messages: prevChatInfo.messages.filter((message) => {
-          if (message._id !== messageId.messageId) {
-            return message;
-          }
-        }),
-      }));
+    socket.on('deletedMessage', () => {
+      queryClient.invalidateQueries(['chatInfo']);
     });
 
     return () => {

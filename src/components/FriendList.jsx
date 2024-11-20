@@ -8,6 +8,7 @@ import { io } from 'socket.io-client';
 import useFriendQuery from '../hooks/useFriendQuery/useFriendQuery';
 import useAddFriendToChatMutation from '../hooks/useAddFriendToChatMutation/useAddFriendToChatMutation';
 import useRemoveFriendMutation from '../hooks/useRemoveFriendMutation/useRemoveFriendMutation';
+import { useQueryClient } from '@tanstack/react-query';
 
 const FriendList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
@@ -24,6 +25,8 @@ const FriendList = (props) => {
   const addFriendToChat = useAddFriendToChatMutation(props.activeId, apiUrl);
   const removeFriend = useRemoveFriendMutation(currentUser, apiUrl);
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     const socket = io(apiUrl, {
@@ -32,52 +35,16 @@ const FriendList = (props) => {
 
     socketRef.current = socket;
 
-    socket.on('addFriend', ({ newFriend, user }) => {
-      if (user._id === currentUser._id) {
-        setFriends((prevFriends) => [...prevFriends, newFriend]);
-        setFilteredFriends((prevFiltered) => [...prevFiltered, newFriend]);
-      }
-      if (newFriend._id === currentUser._id) {
-        setFriends((prevFriends) => [...prevFriends, user]);
-        setFilteredFriends((prevFiltered) => [...prevFiltered, user]);
-      }
+    socket.on('addFriend', () => {
+      queryClient.invalidateQueries(['friends']);
     });
 
-    socket.on('removeFriend', ({ oldFriend, user }) => {
-      if (user._id === currentUser._id) {
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend._id !== oldFriend._id),
-        );
-        setFilteredFriends((prevFiltered) =>
-          prevFiltered.filter((friend) => friend._id !== oldFriend._id),
-        );
-      }
-      if (oldFriend._id === currentUser._id) {
-        setFriends((prevFriends) =>
-          prevFriends.filter((friend) => friend._id !== user._id),
-        );
-        setFilteredFriends((prevFiltered) =>
-          prevFiltered.filter((friend) => friend._id !== user._id),
-        );
-      }
+    socket.on('removeFriend', () => {
+      queryClient.invalidateQueries(['friends']);
     });
 
-    socket.on('addToChat', ({ chat, user }) => {
-      const memberIds = chat.members.map((member) => member._id);
-      const filteredIds = memberIds.filter((id) => id !== user._id);
-      if (filteredIds.includes(currentUser._id)) {
-        props.setChats((prevChats) => {
-          return prevChats.map((item) => {
-            if (item._id === chat._id) {
-              return chat;
-            }
-            return item;
-          });
-        });
-      }
-      if (user._id === currentUser._id) {
-        props.setChats((prevChats) => [...prevChats, chat]);
-      }
+    socket.on('addToChat', () => {
+      queryClient.invalidateQueries(['chats']);
     });
 
     return () => {

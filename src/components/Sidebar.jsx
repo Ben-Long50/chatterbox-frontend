@@ -2,7 +2,7 @@ import UserInfo from './UserInfo';
 import List from './List';
 import ChatList from './ChatList';
 import { Link } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import { AuthContext } from './AuthContext';
