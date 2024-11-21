@@ -35,7 +35,7 @@ const MainLayout = () => {
 
   return (
     <div
-      className={`${theme} layout-cols grid grid-rows-1 bg-white dark:bg-gray-700`}
+      className={`${theme} layout-cols grid grid-rows-1 overflow-y-hidden bg-white dark:bg-gray-700`}
     >
       <Sidebar
         globalChat={globalChat.data}
