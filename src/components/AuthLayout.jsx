@@ -16,7 +16,7 @@ const AuthLayout = () => {
         >
           Theme
           <Icon
-            path={theme === 'dark' ? mdiWeatherSunny : mdiWeatherNight}
+            path={theme === 'light' ? mdiWeatherSunny : mdiWeatherNight}
             size={1.2}
           />
         </button>

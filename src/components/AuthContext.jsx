@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Loading from './Loading';
 import { useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
@@ -13,6 +14,7 @@ const AuthProvider = ({ children }) => {
     return token ? true : false;
   });
   const [currentUser, setCurrentUser] = useState({});
+  const navigate = useNavigate();
 
   const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -64,6 +66,7 @@ const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     localStorage.removeItem('activeId');
     localStorage.removeItem('token');
+    navigate('/signin');
     queryClient.clear();
   };
 

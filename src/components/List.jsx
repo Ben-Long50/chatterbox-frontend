@@ -11,9 +11,6 @@ const List = (props) => {
 
   useEffect(() => {
     const closeList = (e) => {
-      // e.stopPropagation();
-      console.log('test');
-
       if (listOpen && e.target !== detailRef.current) {
         setListOpen(false);
       }
