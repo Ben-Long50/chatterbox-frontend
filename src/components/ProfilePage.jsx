@@ -82,11 +82,11 @@ const ProfilePage = () => {
 
   return (
     <PerfectScrollbar
-      className={`row-start-1 mx-auto mb-auto h-dvh w-full min-w-0 max-xl:col-start-1 max-xl:col-end-3 md:gap-y-16 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
+      className={`row-start-1 mx-auto mb-auto h-dvh w-full min-w-0 max-lg:col-start-1 max-lg:col-end-3 md:gap-y-16 ${visibility ? 'col-start-2 col-end-3' : 'col-start-1 col-end-3'}`}
     >
-      <div className="mx-auto grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 md:pt-20 lg:px-8 lg:pb-8">
+      <div className="mx-auto grid max-w-screen-lg grid-cols-2 gap-x-12 gap-y-10 px-4 pb-4 pt-12 lg:px-8 lg:pb-8 xl:pt-20">
         <div className="col-span-2 w-full gap-12 justify-self-center md:flex-row">
-          <div className="flex flex-col items-center justify-center gap-12 md:flex-row">
+          <div className="flex flex-col items-center justify-center gap-12 xl:flex-row">
             <ProfilePic
               username={userInfo.data.username}
               className="block size-48 shrink-0 bg-gray-200 text-9xl md:float-left md:size-56 dark:bg-gray-900"
