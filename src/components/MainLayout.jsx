@@ -18,7 +18,6 @@ const MainLayout = () => {
 
   useEffect(() => {
     setActiveId(globalChat.data?._id);
-    console.log(chats.data);
   }, [globalChat.data]);
 
   const handleVisibility = () => {

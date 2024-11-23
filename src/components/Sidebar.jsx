@@ -2,7 +2,7 @@ import UserInfo from './UserInfo';
 import List from './List';
 import ChatList from './ChatList';
 import { Link } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiChevronLeft, mdiWeatherNight, mdiWeatherSunny } from '@mdi/js';
 import { AuthContext } from './AuthContext';
@@ -16,6 +16,20 @@ const Sidebar = (props) => {
   const { layoutSize } = useContext(LayoutContext);
   const [activeTab, setActiveTab] = useState('chats');
   const { signout, currentUser } = useContext(AuthContext);
+  const [visibleMenuId, setVisibleMenuId] = useState(null);
+
+  useEffect(() => {
+    const menu = document.getElementById(`${visibleMenuId}`);
+    const hideMenu = (e) => {
+      if (e.target !== menu) {
+        setVisibleMenuId(null);
+      }
+    };
+    window.addEventListener('click', hideMenu);
+    return () => {
+      window.removeEventListener('click', hideMenu);
+    };
+  }, [visibleMenuId]);
 
   const hideSidebar = () => {
     if (layoutSize !== 'large') {
@@ -37,7 +51,7 @@ const Sidebar = (props) => {
           Chatterbox
         </h1>
         <button
-          className={`accent-primary absolute right-4 top-1/2 z-20 grid shrink-0 -translate-y-1/2 place-content-center rounded-full border-b hover:scale-110 ${!props.visibility && 'visible translate-x-180'}`}
+          className={`accent-primary absolute right-4 top-1/2 z-20 grid shrink-0 -translate-y-1/2 place-content-center rounded-full border-b lg:hover:scale-110 ${!props.visibility && 'visible translate-x-180'}`}
           onClick={props.handleVisibility}
         >
           <Icon
@@ -82,6 +96,8 @@ const Sidebar = (props) => {
             setChats={props.setChats}
             handleId={handleId}
             hideSidebar={hideSidebar}
+            visibleMenuId={visibleMenuId}
+            setVisibleMenuId={setVisibleMenuId}
           />
         </>
       )}
@@ -89,9 +105,11 @@ const Sidebar = (props) => {
         <FriendList
           activeId={props.activeId}
           chats={props.chats}
-          setChats={props.setChats}
+          globalChat={props.globalChat}
           handleId={handleId}
           hideSidebar={hideSidebar}
+          visibleMenuId={visibleMenuId}
+          setVisibleMenuId={setVisibleMenuId}
         />
       )}
       {activeTab === 'members' && (
@@ -99,6 +117,8 @@ const Sidebar = (props) => {
           activeId={props.activeId}
           handleId={handleId}
           hideSidebar={hideSidebar}
+          visibleMenuId={visibleMenuId}
+          setVisibleMenuId={setVisibleMenuId}
         />
       )}
       <List className="p-4" heading="Account">

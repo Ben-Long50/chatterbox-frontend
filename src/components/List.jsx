@@ -7,10 +7,24 @@ const List = (props) => {
   const [listHeight, setListHeight] = useState(null);
 
   const listRef = useRef(null);
+  const detailRef = useRef(null);
 
   useEffect(() => {
-    console.log(listRef.current.scrollHeight);
+    const closeList = (e) => {
+      // e.stopPropagation();
+      console.log('test');
 
+      if (listOpen && e.target !== detailRef.current) {
+        setListOpen(false);
+      }
+    };
+    window.addEventListener('click', closeList);
+    return () => {
+      window.removeEventListener('click', closeList);
+    };
+  }, [detailRef]);
+
+  useEffect(() => {
     setListHeight(listRef.current.scrollHeight);
   }, []);
 
@@ -28,6 +42,7 @@ const List = (props) => {
         {props.children}
       </ul>
       <div
+        ref={detailRef}
         className={`${props.className} text-secondary list-primary z-10 m-2 flex items-center justify-between`}
         onClick={toggleList}
       >

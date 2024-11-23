@@ -4,19 +4,15 @@ const Label = (props) => {
   return (
     <button
       type="submit"
-      className={`${props.buttonClass} group/button rounded-full p-1 text-transparent transition duration-300 hover:bg-gray-100 dark:hover:bg-gray-900`}
+      className={`${props.buttonClass} flex items-center gap-2 whitespace-nowrap rounded p-2 transition duration-300 lg:hover:bg-gray-100 lg:dark:hover:bg-gray-900`}
       onClick={props.onClick}
     >
-      <p
-        className={`${props.labelClass} group-hover/button:text-tertiary pointer-events-none absolute -translate-y-7 text-nowrap rounded border-transparent p-1 text-sm text-transparent duration-300 group-hover/button:bg-gray-100 group-hover/button:dark:bg-gray-900`}
-      >
-        {props.label}
-      </p>
       <Icon
-        className={`${props.iconClass} text-inherit`}
+        className={`${props.iconClass} shrink-0 text-inherit`}
         path={props.icon}
-        size={1.2}
-      ></Icon>
+        size={1}
+      />
+      {props.label}
     </button>
   );
 };

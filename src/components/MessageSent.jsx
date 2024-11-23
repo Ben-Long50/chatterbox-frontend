@@ -29,9 +29,8 @@ const MessageSent = (props) => {
       </p>
       <div className="ml-auto flex items-center justify-end gap-4">
         <Label
-          buttonClass="group-hover/message:text-secondary"
+          buttonClass="group-hover/message:text-secondary text-transparent rounded-full"
           labelClass={'translate-x-7'}
-          label="Delete message"
           icon={mdiTrashCanOutline}
           onClick={() => deleteMessage.mutate()}
         />

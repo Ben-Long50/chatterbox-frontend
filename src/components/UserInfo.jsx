@@ -6,7 +6,7 @@ const UserInfo = (props) => {
   const { currentUser } = useContext(AuthContext);
   return (
     <Link
-      className={`${props.className} timing bg-secondary z-10 hover:bg-gray-200 dark:hover:bg-gray-800`}
+      className={`${props.className} timing bg-primary z-10 border-t lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800`}
       to={`/users/${currentUser.username}`}
       state={{ userId: currentUser._id }}
       onClick={() => {
@@ -14,7 +14,7 @@ const UserInfo = (props) => {
         props.hideSidebar();
       }}
     >
-      <div className="bg-primary border-t">
+      <div>
         <div className="flex items-center justify-between gap-2 p-3 pr-6">
           <div className="text-primary flex size-12 items-center justify-center rounded-full bg-gray-300 object-cover text-center text-3xl dark:bg-gray-700">
             <p>

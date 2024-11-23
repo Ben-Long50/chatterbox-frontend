@@ -22,13 +22,13 @@
     @apply text-red-600 dark:text-red-500;
   }
   .list-primary {
-    @apply text-secondary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800;
+    @apply text-secondary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .list-secondary {
-    @apply text-tertiary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800;
+    @apply text-tertiary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .accent-primary {
-    @apply bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-300 dark:border-none dark:shadow-black;
+    @apply bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-200 dark:border-none dark:shadow-black;
   }
   .message-received {
     @apply text-primary my-2 mr-auto max-w-xl rounded-4xl bg-gray-200 p-1 dark:bg-gray-900;
