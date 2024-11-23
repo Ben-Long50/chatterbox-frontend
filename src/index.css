@@ -46,51 +46,51 @@
 
 @keyframes expand0 {
   0% {
-    width: 10%;
+    width: 35%;
   }
   50% {
-    width: 15%;
+    width: 40%;
   }
   100% {
-    width: 10%;
+    width: 35%;
   }
 }
 
 @keyframes expand1 {
   0% {
-    width: 10%;
+    width: 20%;
   }
   50% {
-    width: 15%;
+    width: 25%;
     background-color: rgb(253 224 71 / var(--tw-bg-opacity));
   }
   100% {
-    width: 10%;
+    width: 20%;
   }
 }
 
 @keyframes expand2 {
   0% {
-    width: 30%;
+    width: 40%;
   }
   50% {
-    width: 35%;
+    width: 45%;
     background-color: rgb(253 224 71 / var(--tw-bg-opacity));
   }
   100% {
-    width: 30%;
+    width: 40%;
   }
 }
 
 @keyframes expand3 {
   0% {
-    width: 20%;
+    width: 30%;
   }
   50% {
-    width: 25%;
+    width: 35%;
   }
   100% {
-    width: 20%;
+    width: 30%;
   }
 }
 

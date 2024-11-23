@@ -22,12 +22,9 @@ const AuthLayout = () => {
         </button>
         <Outlet />
       </div>
-      <div className="group container hidden overflow-hidden bg-white lg:col-start-2 lg:col-end-3 lg:block dark:bg-gray-700">
-        <div className="animation-0 absolute left-1/2 top-12 z-0 h-12 overflow-hidden rounded-r-full bg-gray-300 shadow-lg shadow-gray-400 dark:bg-gray-900 dark:shadow-gray-900"></div>
-        <div className="animation-2 absolute right-0 top-1/2 z-0 h-24 overflow-hidden rounded-l-full bg-yellow-200 shadow-lg shadow-gray-400 dark:shadow-gray-900"></div>
-        <div className="animation-3 absolute left-1/2 top-3/4 z-0 h-16 overflow-hidden rounded-r-full bg-gray-300 shadow-lg shadow-gray-400 dark:bg-gray-900 dark:shadow-gray-900"></div>
-        <div className="animation-1 absolute bottom-16 right-0 z-0 h-16 overflow-hidden rounded-l-full bg-yellow-200 shadow-lg shadow-gray-400 dark:shadow-gray-900"></div>
-        <div className="flex h-2/5 flex-col items-start justify-end gap-10">
+      <div className="group hidden h-full flex-col justify-evenly overflow-hidden bg-white lg:col-start-2 lg:col-end-3 lg:flex dark:bg-gray-700">
+        <div className="animation-0 z-0 h-[8%] overflow-hidden rounded-r-3xl bg-gray-300 shadow-lg shadow-gray-400 dark:bg-gray-900 dark:shadow-gray-900"></div>
+        <div className="mx-20 flex flex-col items-start gap-10">
           <h1 className="text-primary line z-10 text-6xl/normal font-semibold">
             Welcome to Chatterbox!
           </h1>
@@ -35,6 +32,9 @@ const AuthLayout = () => {
             The premier anonymous chat room of the web
           </h2>
         </div>
+        <div className="animation-2 z-0 ml-auto h-[12%] overflow-hidden rounded-l-3xl bg-yellow-200 shadow-lg shadow-gray-400 dark:shadow-gray-900"></div>
+        <div className="animation-3 z-0 h-[10%] overflow-hidden rounded-r-3xl bg-gray-300 shadow-lg shadow-gray-400 dark:bg-gray-900 dark:shadow-gray-900"></div>
+        <div className="animation-1 z-0 ml-auto h-[8%] overflow-hidden rounded-l-3xl bg-yellow-200 shadow-lg shadow-gray-400 dark:shadow-gray-900"></div>
       </div>
     </div>
   );
