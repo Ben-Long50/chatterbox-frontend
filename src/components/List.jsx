@@ -11,6 +11,7 @@ const List = (props) => {
 
   useEffect(() => {
     const closeList = (e) => {
+      e.stopPropagation();
       if (listOpen && e.target !== detailRef.current) {
         setListOpen(false);
       }
@@ -19,7 +20,7 @@ const List = (props) => {
     return () => {
       window.removeEventListener('click', closeList);
     };
-  }, [detailRef]);
+  }, [detailRef.current]);
 
   useEffect(() => {
     setListHeight(listRef.current.scrollHeight);

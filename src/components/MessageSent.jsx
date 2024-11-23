@@ -23,7 +23,9 @@ const MessageSent = (props) => {
   );
 
   return (
-    <div className="group/message mb-1 flex flex-col self-end">
+    <div
+      className={`${props.className} group/message mb-1 flex flex-col self-end`}
+    >
       <p className="text-tertiary text-right text-xs">
         {props.author.username}
       </p>

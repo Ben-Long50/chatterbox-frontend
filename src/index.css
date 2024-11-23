@@ -103,6 +103,20 @@
   }
 }
 
+@keyframes new-message {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.new-message {
+  animation: new-message 0.2s ease-out forwards;
+}
+
 .spin {
   animation: spin 0.5s linear infinite;
 }

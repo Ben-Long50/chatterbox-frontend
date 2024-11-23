@@ -17,6 +17,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 const Chat = () => {
   const [draft, setDraft] = useState('');
+  const [sentMessages, setSentMessages] = useState([]);
   const [activeId, setActiveId, visibility, chats] = useOutletContext();
   const { apiUrl, currentUser } = useContext(AuthContext);
 
@@ -34,6 +35,10 @@ const Chat = () => {
       bottomRef.current?.scrollIntoView({ block: 'start' });
     }, 1);
   }, [chatInfo]);
+
+  useEffect(() => {
+    setSentMessages([]);
+  }, [chatInfo.data]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -64,6 +69,7 @@ const Chat = () => {
   };
 
   const handleSubmit = async (e) => {
+    setSentMessages((prevSentMessages) => [...prevSentMessages, draft]);
     e.preventDefault();
     const message = {
       message: draft,
@@ -131,6 +137,17 @@ const Chat = () => {
               </>
             );
           })}
+          {createMessage.isPending &&
+            sentMessages?.map((message, index) => (
+              <MessageSent
+                key={index}
+                className="new-message opacity-50"
+                body={message}
+                author={currentUser}
+                date={createMessage.submittedAt}
+                chatId={activeId}
+              />
+            ))}
           <form
             method="post"
             className="mt-4 flex items-center justify-center gap-6 max-md:gap-3 md:ml-auto md:mr-auto lg:mt-12"
