@@ -12,7 +12,6 @@ const addFriend = async (newFriendId, currentUser, apiUrl) => {
       body: JSON.stringify({ newFriendId }),
     });
     const data = handleResponse(response);
-    console.log(data.message);
   } catch (error) {
     console.error(error);
   }

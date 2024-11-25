@@ -23,15 +23,16 @@ const MessageSent = (props) => {
   );
 
   return (
-    <div className="group/message mb-1 flex flex-col self-end">
+    <div
+      className={`${props.className} group/message mb-1 flex flex-col self-end`}
+    >
       <p className="text-tertiary text-right text-xs">
         {props.author.username}
       </p>
       <div className="ml-auto flex items-center justify-end gap-4">
         <Label
-          buttonClass="group-hover/message:text-secondary"
+          buttonClass="group-hover/message:text-secondary text-transparent rounded-full"
           labelClass={'translate-x-7'}
-          label="Delete message"
           icon={mdiTrashCanOutline}
           onClick={() => deleteMessage.mutate()}
         />

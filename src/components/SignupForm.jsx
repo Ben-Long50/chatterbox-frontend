@@ -52,9 +52,8 @@ const SignupForm = () => {
     <div className="flex w-1/2 min-w-80 flex-col gap-6">
       <Form method="post" onSubmit={handleSubmit} buttonText="Sign Up">
         <h1 className="text-primary text-4xl font-semibold">
-          Welcome to Chatterbox
+          Create your account
         </h1>
-        <p className="text-secondary pb-4">create your account</p>
         <InputField
           label="Username"
           name="username"

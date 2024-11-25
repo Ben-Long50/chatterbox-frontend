@@ -5,8 +5,8 @@ const useCreateMessageMutation = (activeId, apiUrl) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (message) => createMessage(activeId, message, apiUrl),
-    onSuccess: () => {
-      queryClient.invalidateQueries(['chatInfo']);
+    onSettled: () => {
+      return queryClient.invalidateQueries(['chatInfo']);
     },
   });
 };

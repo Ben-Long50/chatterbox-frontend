@@ -22,19 +22,22 @@
     @apply text-red-600 dark:text-red-500;
   }
   .list-primary {
-    @apply text-secondary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800;
+    @apply text-secondary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .list-secondary {
-    @apply text-tertiary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 hover:bg-gray-200 dark:hover:bg-gray-800;
+    @apply text-tertiary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .accent-primary {
-    @apply bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-300 dark:border-none dark:shadow-black;
+    @apply bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-200 dark:border-none dark:shadow-black;
   }
   .message-received {
     @apply text-primary my-2 mr-auto max-w-xl rounded-4xl bg-gray-200 p-1 dark:bg-gray-900;
   }
   .message-sent {
     @apply my-2 max-w-xl rounded-4xl bg-yellow-200 p-1 text-gray-900;
+  }
+  .timing {
+    @apply transition-all duration-300;
   }
   .layout-cols {
     grid-template-columns: minmax(300px, 28rem) auto;
@@ -43,51 +46,51 @@
 
 @keyframes expand0 {
   0% {
-    width: 10%;
+    width: 35%;
   }
   50% {
-    width: 15%;
+    width: 40%;
   }
   100% {
-    width: 10%;
+    width: 35%;
   }
 }
 
 @keyframes expand1 {
   0% {
-    width: 10%;
+    width: 20%;
   }
   50% {
-    width: 15%;
+    width: 25%;
     background-color: rgb(253 224 71 / var(--tw-bg-opacity));
   }
   100% {
-    width: 10%;
+    width: 20%;
   }
 }
 
 @keyframes expand2 {
   0% {
-    width: 30%;
+    width: 40%;
   }
   50% {
-    width: 35%;
+    width: 45%;
     background-color: rgb(253 224 71 / var(--tw-bg-opacity));
   }
   100% {
-    width: 30%;
+    width: 40%;
   }
 }
 
 @keyframes expand3 {
   0% {
-    width: 20%;
+    width: 30%;
   }
   50% {
-    width: 25%;
+    width: 35%;
   }
   100% {
-    width: 20%;
+    width: 30%;
   }
 }
 
@@ -98,6 +101,20 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@keyframes new-message {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.new-message {
+  animation: new-message 0.2s ease-out forwards;
 }
 
 .spin {

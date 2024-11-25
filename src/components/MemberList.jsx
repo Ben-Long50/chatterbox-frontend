@@ -1,7 +1,7 @@
 import ScrollBar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
 import Label from './Label';
-import { mdiPlus } from '@mdi/js';
+import { mdiAccountPlus, mdiPlus } from '@mdi/js';
 import { useContext, useState, useRef, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { io } from 'socket.io-client';
@@ -9,6 +9,7 @@ import Loading from './Loading';
 import useMembersQuery from '../hooks/useMembersQuery/useMembersQuery';
 import useAddFriendMutation from '../hooks/useAddFriendMutation/useAddFriendMutation';
 import { useQueryClient } from '@tanstack/react-query';
+import SettingsMenu from './SettingsMenu';
 
 const MemberList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
@@ -95,16 +96,22 @@ const MemberList = (props) => {
                     </div>
                     <p>{member.username}</p>
                   </Link>
-                  <Label
-                    buttonClass={`${props.activeId === member._id && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
-                    labelClass={'-translate-x-full'}
-                    label="Add friend"
-                    icon={mdiPlus}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addFriend.mutate(member._id, currentUser);
-                    }}
-                  />
+                  <SettingsMenu
+                    id={member._id}
+                    visibleMenuId={props.visibleMenuId}
+                    setVisibleMenuId={props.setVisibleMenuId}
+                  >
+                    <Label
+                      buttonClass={`${props.activeId === member._id && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
+                      labelClass={'-translate-x-full'}
+                      label="Add as friend"
+                      icon={mdiAccountPlus}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addFriend.mutate(member._id, currentUser);
+                      }}
+                    />
+                  </SettingsMenu>
                 </li>
               );
             })}

@@ -1,7 +1,7 @@
 import ScrollBar from 'react-perfect-scrollbar';
 import { Link } from 'react-router-dom';
 import Label from './Label';
-import { mdiPlus, mdiMinus } from '@mdi/js';
+import { mdiPlus, mdiMinus, mdiAccountMinus, mdiChatPlus } from '@mdi/js';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from './AuthContext';
 import { io } from 'socket.io-client';
@@ -9,6 +9,7 @@ import useFriendQuery from '../hooks/useFriendQuery/useFriendQuery';
 import useAddFriendToChatMutation from '../hooks/useAddFriendToChatMutation/useAddFriendToChatMutation';
 import useRemoveFriendMutation from '../hooks/useRemoveFriendMutation/useRemoveFriendMutation';
 import { useQueryClient } from '@tanstack/react-query';
+import SettingsMenu from './SettingsMenu';
 
 const FriendList = (props) => {
   const { apiUrl, currentUser } = useContext(AuthContext);
@@ -93,28 +94,34 @@ const FriendList = (props) => {
                   </div>
                   <p>{friend.username}</p>
                 </Link>
-                {props.activeId !== 'global' && (
+                <SettingsMenu
+                  id={friend._id}
+                  visibleMenuId={props.visibleMenuId}
+                  setVisibleMenuId={props.setVisibleMenuId}
+                >
+                  {props.activeId !== props.globalChat._id && (
+                    <Label
+                      buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
+                      labelClass={'-translate-x-full'}
+                      label="Add friend to active chat"
+                      icon={mdiChatPlus}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addFriendToChat.mutate(friend._id);
+                      }}
+                    />
+                  )}
                   <Label
                     buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
                     labelClass={'-translate-x-full'}
-                    label="Add friend to active chat"
-                    icon={mdiPlus}
+                    label="Remove as friend"
+                    icon={mdiAccountMinus}
                     onClick={(e) => {
                       e.stopPropagation();
-                      addFriendToChat.mutate(friend._id);
+                      removeFriend.mutate(friend._id);
                     }}
                   />
-                )}
-                <Label
-                  buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
-                  labelClass={'-translate-x-full'}
-                  label="Remove as friend"
-                  icon={mdiMinus}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFriend.mutate(friend._id);
-                  }}
-                />
+                </SettingsMenu>
               </li>
             );
           })}
