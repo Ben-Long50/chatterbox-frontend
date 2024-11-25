@@ -104,7 +104,7 @@ const Chat = () => {
             {chatInfo.data.name}
           </h1>
         </div>
-        <div className="mx-auto w-full max-w-screen-xl shrink-0 gap-1 self-end px-4 pb-4 lg:px-8 lg:pb-8">
+        <div className="mx-auto w-full max-w-screen-xl shrink-0 gap-1 self-end px-4 lg:px-8">
           {chatInfo.data.messages.map((message, index) => {
             const isNewDate =
               index === 0 ||
@@ -148,9 +148,10 @@ const Chat = () => {
                 chatId={activeId}
               />
             ))}
+          <div ref={bottomRef}></div>
           <form
             method="post"
-            className="mt-4 flex items-center justify-center gap-6 max-md:gap-3 md:ml-auto md:mr-auto lg:mt-12"
+            className="sticky bottom-0 mt-4 flex items-center justify-center gap-6 pb-4 max-md:gap-3 md:ml-auto md:mr-auto lg:mt-12 lg:pb-8"
             onSubmit={handleSubmit}
           >
             <input
@@ -177,7 +178,6 @@ const Chat = () => {
           </form>
         </div>
       </div>
-      <div ref={bottomRef}></div>
     </PerfectScrollbar>
   );
 };
