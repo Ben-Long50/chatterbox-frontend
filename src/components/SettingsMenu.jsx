@@ -3,7 +3,7 @@ import Icon from '@mdi/react';
 
 const SettingsMenu = (props) => {
   return (
-    <div id={props.id} className="relative p-2">
+    <div id={props.id} className="relative p-2 text-inherit">
       <Icon
         onClick={(e) => {
           e.stopPropagation();

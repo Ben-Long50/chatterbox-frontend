@@ -102,8 +102,6 @@ const MemberList = (props) => {
                     setVisibleMenuId={props.setVisibleMenuId}
                   >
                     <Label
-                      buttonClass={`${props.activeId === member._id && 'group-hover/user:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/user:text-secondary`}
-                      labelClass={'-translate-x-full'}
                       label="Add as friend"
                       icon={mdiAccountPlus}
                       onClick={(e) => {

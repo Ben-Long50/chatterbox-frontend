@@ -13,19 +13,19 @@
     @apply text-gray-800 dark:text-gray-50;
   }
   .text-secondary {
-    @apply text-gray-700 dark:text-gray-200;
+    @apply text-gray-600 dark:text-gray-200;
   }
   .text-tertiary {
-    @apply text-gray-600 dark:text-gray-300;
+    @apply text-gray-400 dark:text-gray-400;
   }
   .text-error {
     @apply text-red-600 dark:text-red-500;
   }
   .list-primary {
-    @apply text-secondary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
+    @apply text-primary cursor-pointer rounded px-3 py-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .list-secondary {
-    @apply text-tertiary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
+    @apply text-secondary w-full cursor-pointer rounded pr-2 text-left text-base font-medium transition duration-300 lg:hover:bg-gray-200 lg:dark:hover:bg-gray-800;
   }
   .accent-primary {
     @apply bg-yellow-200 text-gray-900 shadow-md shadow-gray-400 transition duration-300 hover:bg-yellow-200 dark:border-none dark:shadow-black;

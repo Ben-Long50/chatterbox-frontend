@@ -101,8 +101,6 @@ const FriendList = (props) => {
                 >
                   {props.activeId !== props.globalChat._id && (
                     <Label
-                      buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
-                      labelClass={'-translate-x-full'}
                       label="Add friend to active chat"
                       icon={mdiChatPlus}
                       onClick={(e) => {
@@ -112,8 +110,6 @@ const FriendList = (props) => {
                     />
                   )}
                   <Label
-                    buttonClass={`${props.activeId === friend._id && 'group-hover/friend:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/friend:text-secondary`}
-                    labelClass={'-translate-x-full'}
                     label="Remove as friend"
                     icon={mdiAccountMinus}
                     onClick={(e) => {

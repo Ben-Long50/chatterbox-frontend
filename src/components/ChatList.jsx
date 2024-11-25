@@ -100,8 +100,6 @@ const ChatList = (props) => {
                   >
                     <>
                       <Label
-                        buttonClass={`${props.activeId === chat._id && 'group-hover/chat:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/chat:text-secondary`}
-                        labelClass={'-translate-x-full'}
                         label="Delete chat"
                         icon={mdiTrashCanOutline}
                         onClick={(e) => {
@@ -112,8 +110,6 @@ const ChatList = (props) => {
                       {chat.members.map((member, index) => (
                         <Label
                           key={index}
-                          buttonClass={`${props.activeId === chat._id && 'group-hover/chat:text-gray-900 dark:hover:bg-yellow-200 hover:bg-yellow-200'} group-hover/chat:text-secondary`}
-                          labelClass={'-translate-x-full'}
                           label={`Remove ${member.username} from chat`}
                           icon={mdiChatMinus}
                           onClick={(e) => {
