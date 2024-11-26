@@ -51,12 +51,12 @@ const FriendList = (props) => {
 
   const handleChange = () => {
     if (inputRef.current.value === '') {
-      setFilteredFriends(friends);
+      setFilteredFriends(friends.data);
     } else {
-      const filteredFriends = friends.filter((friend) => {
+      const filteredFriends = friends.data.filter((friend) => {
         return friend.username
           .toLowerCase()
-          .startsWith(inputRef.current.value.toLowerCase());
+          .includes(inputRef.current.value.toLowerCase());
       });
       setFilteredFriends(filteredFriends);
     }

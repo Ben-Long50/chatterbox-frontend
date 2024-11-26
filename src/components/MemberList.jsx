@@ -50,12 +50,12 @@ const MemberList = (props) => {
 
   const handleChange = () => {
     if (inputRef.current.value == '') {
-      setFilteredMembers(members);
+      setFilteredMembers(members.data);
     } else {
-      const filteredMembers = members.filter((member) => {
+      const filteredMembers = members.data.filter((member) => {
         return member.username
           .toLowerCase()
-          .startsWith(inputRef.current.value.toLowerCase());
+          .includes(inputRef.current.value.toLowerCase());
       });
       setFilteredMembers(filteredMembers);
     }
