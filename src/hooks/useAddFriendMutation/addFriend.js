@@ -14,6 +14,7 @@ const addFriend = async (newFriendId, currentUser, apiUrl) => {
     const data = handleResponse(response);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

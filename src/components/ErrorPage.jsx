@@ -1,25 +1,44 @@
-import { Link } from 'react-router-dom';
+import { useNavigate, useRouteError } from 'react-router-dom';
 import { useContext } from 'react';
 import { ThemeContext } from './ThemeContext';
+import { mdiAlertCircleOutline } from '@mdi/js';
+import Icon from '@mdi/react';
+import Button from './Button';
 
 const ErrorPage = () => {
-  const { theme, setTheme } = useContext(ThemeContext);
-  const token = localStorage.getItem('token');
+  const { theme } = useContext(ThemeContext);
+  const error = useRouteError();
+  const navigate = useNavigate();
 
   return (
     <div
-      className={`${theme} flex h-dvh w-dvw flex-col items-center justify-center gap-8 bg-white p-4 dark:bg-gray-900`}
+      className={`${theme} bg-primary flex h-dvh w-full flex-col items-center justify-start gap-4 px-6 py-8 md:gap-8`}
     >
-      <h1 className="text-primary text-center text-5xl font-semibold">
-        {token ? 'This page does not exist' : 'Your session is expired'}
+      <Icon
+        className="fade-in-bottom text-accent text-yellow-200"
+        path={mdiAlertCircleOutline}
+        size={5}
+      />
+      <h1 className="fade-in-bottom text-primary text-center text-2xl font-semibold md:text-3xl">
+        Oops an error occured
       </h1>
-
-      <Link
-        className="accent-primary rounded px-4 py-3 text-xl text-gray-900 transition duration-300 hover:scale-105"
-        to={token ? '/signin' : '/signin'}
-      >
-        {token ? 'Sign in' : 'Sign in'}
-      </Link>
+      <p className="fade-in-bottom text-error text-center text-xl">
+        {error.message}
+      </p>
+      <div className="fade-in-bottom grid grid-cols-2 gap-4 md:gap-8">
+        <Button
+          className="w-full px-3 py-2 text-lg md:text-xl"
+          onClick={() => navigate(0)}
+        >
+          Refresh page
+        </Button>
+        <Button
+          className="w-full p-2 text-lg md:text-xl"
+          onClick={() => navigate('/signin')}
+        >
+          Sign in
+        </Button>
+      </div>
     </div>
   );
 };

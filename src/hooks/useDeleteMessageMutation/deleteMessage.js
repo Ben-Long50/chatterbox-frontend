@@ -16,6 +16,7 @@ const deleteMessage = async (messageId, chatId, currentUser, apiUrl) => {
     console.log(result.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

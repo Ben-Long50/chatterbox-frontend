@@ -12,6 +12,7 @@ const deleteProfile = async (currentUser, apiUrl) => {
     console.log(data.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

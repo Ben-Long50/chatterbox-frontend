@@ -18,6 +18,7 @@ const updateProfile = async (formData, currentUser, apiUrl) => {
     }
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

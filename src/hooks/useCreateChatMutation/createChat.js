@@ -15,6 +15,7 @@ const createChat = async (chat, apiUrl) => {
     console.log(data.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

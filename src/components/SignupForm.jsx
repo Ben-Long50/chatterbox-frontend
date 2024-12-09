@@ -1,9 +1,10 @@
 import { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Form from './Form';
 import InputField from './InputField';
 import Button from './Button';
 import { AuthContext } from './AuthContext';
+import useSignupMutation from '../hooks/useSignupMutation/useSignupMutation';
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,6 @@ const SignupForm = () => {
     confirmPassword: '',
   });
   const [errors, setErrors] = useState([]);
-  const navigate = useNavigate();
   const { apiUrl } = useContext(AuthContext);
 
   const handleChange = (e) => {
@@ -23,29 +23,11 @@ const SignupForm = () => {
     });
   };
 
+  const signupMutation = useSignupMutation(apiUrl, setErrors);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`${apiUrl}/users/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const result = await response.json();
-      if (response.ok) {
-        console.log(result);
-        navigate('/signin');
-      } else {
-        const errorArray = result.map((error) => {
-          return error.msg;
-        });
-        setErrors(errorArray);
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+    signupMutation.mutate(formData);
   };
 
   return (

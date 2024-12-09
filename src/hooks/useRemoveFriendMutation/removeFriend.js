@@ -15,6 +15,7 @@ const removeFriend = async (friendId, currentUser, apiUrl) => {
     console.log(data.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

@@ -16,6 +16,7 @@ const removeFromChat = async (chatId, memberId, apiUrl) => {
     console.log(data.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

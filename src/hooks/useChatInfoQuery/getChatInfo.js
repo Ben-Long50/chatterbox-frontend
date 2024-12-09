@@ -13,6 +13,7 @@ const getChatInfo = async (activeId, apiUrl) => {
     return data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

@@ -18,17 +18,17 @@ const MainLayout = () => {
 
   useEffect(() => {
     setActiveId(globalChat.data?._id);
-  }, [globalChat.data]);
+  }, [globalChat?.data]);
 
   const handleVisibility = () => {
     setVisibility((prevVisibility) => !prevVisibility);
   };
 
-  if (globalChat.isLoading || globalChat.isPending) {
+  if (globalChat?.isLoading || globalChat?.isPending) {
     return <Loading />;
   }
 
-  if (chats.isLoading || chats.isPending) {
+  if (chats?.isLoading || chats?.isPending) {
     return <Loading />;
   }
 
@@ -37,8 +37,8 @@ const MainLayout = () => {
       className={`${theme} layout-cols grid grid-rows-1 overflow-y-hidden bg-white dark:bg-gray-700`}
     >
       <Sidebar
-        globalChat={globalChat.data}
-        chats={chats.data}
+        globalChat={globalChat?.data}
+        chats={chats?.data}
         activeId={activeId}
         setActiveId={setActiveId}
         visibility={visibility}

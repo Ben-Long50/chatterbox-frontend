@@ -15,6 +15,7 @@ const addFriendToChat = async (friendId, activeId, apiUrl) => {
     console.log(data.message);
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 

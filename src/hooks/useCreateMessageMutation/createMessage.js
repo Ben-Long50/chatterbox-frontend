@@ -16,6 +16,7 @@ const createMessage = async (activeId, message, apiUrl) => {
     return data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
