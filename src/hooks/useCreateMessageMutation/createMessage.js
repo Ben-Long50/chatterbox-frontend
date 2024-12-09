@@ -4,7 +4,7 @@ const createMessage = async (activeId, message, apiUrl) => {
   const token = localStorage.getItem('token');
 
   try {
-    const response = await fetch(`${apiUrl}/chats/${activeId}`, {
+    const response = await fetch(`${apiUrl}/chats/${activeId}/messages`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

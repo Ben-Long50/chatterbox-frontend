@@ -1,23 +1,4 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-
 <a id="readme-top"></a>
-
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 
 <!-- PROJECT LOGO -->
 <br />
@@ -135,23 +116,33 @@ To access the live version of this project and explore all of it's features, use
 
 ### Installation
 
-1. **Clone the Repository**  
+1. **Clone the Repository**
+
    Run the following command to clone the repository:
+
    ```sh
    git clone https://github.com/Ben-Long50/chatterbox-frontend.git
    ```
-2. **Navigate to the Project Directory and Install Dependencies**  
+
+2. **Navigate to the Project Directory and Install Dependencies**
+
    Move into the project directory and install the required npm packages:
+
    ```sh
    cd chatterbox-frontend
    npm install
    ```
-3. **Set Up Environment Variables**  
+
+3. **Set Up Environment Variables**
+
    Create a .env file in the project’s base directory and add the following environment variable:
+
    ```js
    VITE_API_URL = 'http://localhost:3000';
    ```
-4. **Avoid Accidental Pushes to the Original Repository**  
+
+4. **Avoid Accidental Pushes to the Original Repository**
+
    If you plan to make changes, update the Git remote to point to your own fork to prevent accidental pushes to the base repository:
 
    ```sh
@@ -171,8 +162,10 @@ To access the live version of this project and explore all of it's features, use
    origin  https://github.com/<your_github_username>/chatterbox-frontend.git (push)
    ```
 
-5. **Start the Development Server**  
+5. **Start the Development Server**
+
    Run the following command to start the app:
+
    ```sh
    npm run dev
    ```
